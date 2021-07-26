@@ -35,7 +35,7 @@ class _FileSelectPageState extends State<FileSelectPage> {
         elevation: 0,
         leading: NiIconButton(
           onTap: () {
-            Get.back();
+            Navigator.of(context).pop();
           },
           child: Icon(
             Icons.arrow_back_ios_new,

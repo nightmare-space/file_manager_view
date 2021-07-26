@@ -35,7 +35,7 @@ class _DirectorySelectPageState extends State<DirectorySelectPage> {
         elevation: 0,
         leading: NiIconButton(
           onTap: () {
-            Get.back();
+            Navigator.of(context).pop();
           },
           child: Icon(
             Icons.arrow_back_ios_new,

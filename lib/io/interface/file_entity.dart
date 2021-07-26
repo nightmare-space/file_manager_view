@@ -5,7 +5,7 @@ import 'file.dart';
 import 'package:path/path.dart' as p;
 
 abstract class FileEntity {
-  XProcess shell;
+  Executable shell;
   //这个名字可能带有->/x/x的字符
   String path;
   //完整信息

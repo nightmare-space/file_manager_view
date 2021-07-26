@@ -1,12 +1,20 @@
 import 'package:file_manager_view/extension/directory_extension.dart';
 import 'package:file_manager_view/file_manager_view.dart';
 import 'package:flutter/material.dart';
+import 'package:global_repository/global_repository.dart';
 
 import 'observable.dart';
 
 class FileManagerController with Observable {
-  FileManagerController(this.dirPath);
-
+  FileManagerController(
+    this.dirPath, {
+    this.initOffset = 0,
+  }) {
+    Log.e('初始化');
+    scrollController = ScrollController(initialScrollOffset: initOffset);
+  }
+  final double initOffset;
+  ScrollController scrollController;
   String dirPath;
 
   //保存所有文件的节点
@@ -20,7 +28,7 @@ class FileManagerController with Observable {
       dirPath,
     );
     fileNodes = await dir.listSort();
-    print('_getFileNodes后');
+    print('${this.hashCode} _getFileNodes后');
     notifyListeners();
     // 在一次获取后异步更新文件节点的其他参数，这个过程是非常快的
     // getNodeFullArgs();

@@ -41,20 +41,21 @@ class FileManagerWindow extends StatefulWidget {
 class _FileManagerWindowState extends State<FileManagerWindow>
     with TickerProviderStateMixin {
   List<FileManagerController> _controllers = [];
-  //列表滑动控制器
-  final ScrollController _scrollController = ScrollController();
   //动画控制器，用来控制文件夹进入时的透明度
   AnimationController _animationController;
   //透明度动画补间值
   Animation<double> _opacityTween;
   //记录每一次的浏览位置，key 是路径，value是offset
+  Map<String, double> offsetStore = {};
   PageController pageController = PageController(initialPage: 0);
   FileSelectController fileSelectController = Get.find();
+  String currentPath = '';
 
   @override
   void initState() {
     super.initState();
     _controllers.add(FileManagerController(widget.initPath));
+    Log.w(_controllers.last.scrollController);
     fileSelectController?.updateCurrentDirPath(widget.initPath);
     initAnimation();
     pageController.addListener(() {
@@ -105,14 +106,23 @@ class _FileManagerWindowState extends State<FileManagerWindow>
 
   Future<bool> onWillPop() async {
     if (_controllers.length == 1) {
-      SystemNavigator.pop();
+      Navigator.of(context).pop();
     } else {
-      await pageController.previousPage(
-        duration: Duration(milliseconds: 200),
+      currentPath = path.dirname(currentPath);
+
+      FileManagerController ctl = FileManagerController(
+        currentPath,
+        initOffset: offsetStore[currentPath] ?? 0,
+      );
+      _controllers[0] = ctl;
+      setState(() {});
+      pageController.previousPage(
+        duration: pageJumpDuration,
         curve: Curves.easeIn,
       );
-      _controllers.removeLast();
-      setState(() {});
+
+      Log.e('offsetStore[currentPath] -> ${offsetStore[currentPath]}');
+      // fileSelectController?.updateCurrentDirPath(entity.parentPath);
     }
 
     // final Clipboards clipboards = Global.instance.clipboards;
@@ -135,10 +145,58 @@ class _FileManagerWindowState extends State<FileManagerWindow>
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _animationController.dispose();
 
     super.dispose();
+  }
+
+  Duration pageJumpDuration = const Duration(milliseconds: 200);
+
+  Future<void> handleTap(FileEntity entity) async {
+    if (entity.isDirectory) {
+      if (entity.name == '..') {
+        currentPath = path.dirname(currentPath);
+
+        FileManagerController ctl = FileManagerController(
+          currentPath,
+          initOffset: offsetStore[currentPath] ?? 0,
+        );
+        _controllers[0] = ctl;
+        setState(() {});
+        pageController.previousPage(
+          duration: pageJumpDuration,
+          curve: Curves.easeIn,
+        );
+
+        Log.e('offsetStore[currentPath] -> ${offsetStore[currentPath]}');
+        fileSelectController?.updateCurrentDirPath(entity.parentPath);
+      } else {
+        FileManagerController ctl = FileManagerController(entity.path);
+        currentPath = entity.path;
+        setState(() {});
+        offsetStore[entity.parentPath] =
+            _controllers.first.scrollController.offset;
+        if (_controllers.length == 1) {
+          _controllers.add(ctl);
+        } else {
+          _controllers[1] = ctl;
+        }
+        pageController
+            .nextPage(
+          duration: pageJumpDuration,
+          curve: Curves.easeIn,
+        )
+            .whenComplete(() {
+          Log.w(_controllers);
+          // Future.delayed(Duration.zero, () {
+          //   _controllers.removeAt(0);
+          //   setState(() {});
+          // });
+        });
+        fileSelectController?.updateCurrentDirPath(entity.path);
+      }
+      Log.e('currentPath -> $currentPath');
+    }
   }
 
   WillPopScope buldHome(BuildContext context) {
@@ -152,6 +210,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
           child: PageView.builder(
             controller: pageController,
             itemCount: _controllers.length,
+            // physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (c, index) {
               double scale = 1.0;
               if (pageController.hasClients && _controllers.length > 1) {
@@ -169,29 +228,8 @@ class _FileManagerWindowState extends State<FileManagerWindow>
               return Transform(
                 transform: Matrix4.identity()..scale(scale),
                 child: FileManagerListView(
-                  itemOnTap: (entity) async {
-                    FileManagerController ctl =
-                        FileManagerController(entity.path);
-                    if (entity.isDirectory) {
-                      if (entity.name == '..') {
-                        await pageController.previousPage(
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.easeIn,
-                        );
-                        _controllers.removeLast();
-                        fileSelectController
-                            ?.updateCurrentDirPath(entity.parentPath);
-                      } else {
-                        _controllers.add(ctl);
-                        pageController.nextPage(
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.easeIn,
-                        );
-                        fileSelectController?.updateCurrentDirPath(entity.path);
-                        setState(() {});
-                      }
-                    }
-                  },
+                  key: Key(_controllers[index].hashCode.toString()),
+                  itemOnTap: handleTap,
                   itemOnLongPress: (entity) {},
                   controller: _controllers[index],
                   windowType: widget.windowType,

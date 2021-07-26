@@ -11,7 +11,7 @@ abstract class Directory extends FileEntity {
   factory Directory.getPlatformDirectory(
     String path, {
     String info = '',
-    XProcess shell,
+    Executable shell,
   }) {
     shell ??= YanProcess();
     if (Platform.isWindows) {

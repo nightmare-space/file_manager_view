@@ -8,7 +8,7 @@ import 'package:global_repository/global_repository.dart';
 import 'package:signale/signale.dart';
 
 class DirectoryUnix extends FileEntity implements Directory {
-  DirectoryUnix(String path, {String info, XProcess shell}) {
+  DirectoryUnix(String path, {String info, Executable shell}) {
     this.path = path;
     this.info = info;
     this.shell = shell;

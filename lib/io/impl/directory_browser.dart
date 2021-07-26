@@ -4,7 +4,7 @@ import 'package:file_manager_view/io/interface/file_entity.dart';
 import 'package:global_repository/global_repository.dart';
 
 class DirectoryBrowser extends FileEntity implements Directory {
-  DirectoryBrowser(String path, {String info = '', XProcess shell}) {
+  DirectoryBrowser(String path, {String info = '', Executable shell}) {
     this.path = path;
     this.info = info;
   }

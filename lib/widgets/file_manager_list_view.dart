@@ -32,7 +32,6 @@ class FileManagerListView extends StatefulWidget {
 }
 
 class _FileManagerListViewState extends State<FileManagerListView> {
-  ScrollController scrollController = ScrollController();
   Future<void> initFMPage() async {
     //页面启动的时候的初始化
     widget.controller.addListener(controllerCallback);
@@ -99,7 +98,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         cacheExtent: 400,
-        controller: scrollController,
+        controller: widget.controller.scrollController,
         itemCount: widget.controller.fileNodes.length,
         padding: EdgeInsets.only(bottom: 100),
         //不然会有一个距离上面的边距
