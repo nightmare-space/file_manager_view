@@ -161,25 +161,41 @@ class _FileManagerWindowState extends State<FileManagerWindow>
           currentPath,
           initOffset: offsetStore[currentPath] ?? 0,
         );
-        _controllers[0] = ctl;
+        _controllers.insert(0, ctl);
         setState(() {});
-        pageController.previousPage(
-          duration: pageJumpDuration,
-          curve: Curves.easeIn,
-        );
-
+        pageController.jumpToPage(1);
+        // pageController
+        //     .previousPage(
+        //   duration: pageJumpDuration,
+        //   curve: Curves.easeIn,
+        // )
+        //     .whenComplete(() {
+        //   Future.delayed(Duration.zero, () {
+        //     _controllers.removeAt(1);
+        //     setState(() {});
+        //   });
+        // });
         Log.e('offsetStore[currentPath] -> ${offsetStore[currentPath]}');
         fileSelectController?.updateCurrentDirPath(entity.parentPath);
       } else {
         FileManagerController ctl = FileManagerController(entity.path);
         currentPath = entity.path;
         setState(() {});
-        offsetStore[entity.parentPath] =
-            _controllers.first.scrollController.offset;
         if (_controllers.length == 1) {
+          // offsetStore[entity.parentPath] =
+          //     _controllers.first.scrollController.offset;
+          Log.w('${pageController.page} ');
           _controllers.add(ctl);
+          setState(() {});
         } else {
+          // offsetStore[entity.parentPath] =
+          //     _controllers.first.scrollController.offset;
+
+          Log.e('${pageController.page} ');
+          setState(() {});
+          Log.e('${pageController.page} ');
           _controllers[1] = ctl;
+          setState(() {});
         }
         pageController
             .nextPage(
@@ -187,11 +203,10 @@ class _FileManagerWindowState extends State<FileManagerWindow>
           curve: Curves.easeIn,
         )
             .whenComplete(() {
-          Log.w(_controllers);
-          // Future.delayed(Duration.zero, () {
-          //   _controllers.removeAt(0);
-          //   setState(() {});
-          // });
+          Future.delayed(Duration.zero, () {
+            _controllers.removeAt(0);
+            setState(() {});
+          });
         });
         fileSelectController?.updateCurrentDirPath(entity.path);
       }
