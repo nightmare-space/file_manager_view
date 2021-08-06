@@ -1,6 +1,5 @@
 import 'dart:io' as io;
 import 'package:file_manager_view/config/config.dart';
-import 'package:file_manager_view/extension/file_entity_extension.dart';
 import 'package:file_manager_view/io/interface/directory.dart';
 import 'package:file_manager_view/io/interface/file.dart';
 import 'package:file_manager_view/io/interface/file_entity.dart';

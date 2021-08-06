@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('文件管理器'),
+        title: const Text('文件管理器'),
       ),
       body: Center(
         child: Column(
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: SizedBox(
                     height: 60,
                     width: MediaQuery.of(context).size.width,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         '选择文件',
                         style: TextStyle(
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: SizedBox(
                     height: 60,
                     width: MediaQuery.of(context).size.width,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         '选择文件夹',
                         style: TextStyle(

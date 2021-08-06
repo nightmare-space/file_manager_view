@@ -21,11 +21,13 @@ class FileManagerListView extends StatefulWidget {
     this.windowType,
     this.itemOnTap,
     this.itemOnLongPress,
+    this.initScrollOffset = 0,
   }) : super(key: key);
   final FileManagerController controller;
   final WindowType windowType;
   final FileOnTap itemOnTap;
   final FileOnLongPress itemOnLongPress;
+  final double initScrollOffset;
 
   @override
   _FileManagerListViewState createState() => _FileManagerListViewState();
@@ -98,7 +100,8 @@ class _FileManagerListViewState extends State<FileManagerListView> {
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         cacheExtent: 400,
-        controller: widget.controller.scrollController,
+        controller:
+            ScrollController(initialScrollOffset: widget.initScrollOffset),
         itemCount: widget.controller.fileNodes.length,
         padding: EdgeInsets.only(bottom: 100),
         //不然会有一个距离上面的边距

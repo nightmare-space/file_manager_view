@@ -11,10 +11,8 @@ class FileManagerController with Observable {
     this.initOffset = 0,
   }) {
     Log.e('初始化');
-    scrollController = ScrollController(initialScrollOffset: initOffset);
   }
   final double initOffset;
-  ScrollController scrollController;
   String dirPath;
 
   //保存所有文件的节点

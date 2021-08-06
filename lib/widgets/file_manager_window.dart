@@ -50,12 +50,12 @@ class _FileManagerWindowState extends State<FileManagerWindow>
   PageController pageController = PageController(initialPage: 0);
   FileSelectController fileSelectController = Get.find();
   String currentPath = '';
+  double initScrollOffset = 0;
 
   @override
   void initState() {
     super.initState();
     _controllers.add(FileManagerController(widget.initPath));
-    Log.w(_controllers.last.scrollController);
     fileSelectController?.updateCurrentDirPath(widget.initPath);
     initAnimation();
     pageController.addListener(() {
@@ -157,13 +157,12 @@ class _FileManagerWindowState extends State<FileManagerWindow>
       if (entity.name == '..') {
         currentPath = path.dirname(currentPath);
 
-        FileManagerController ctl = FileManagerController(
-          currentPath,
-          initOffset: offsetStore[currentPath] ?? 0,
-        );
-        _controllers.insert(0, ctl);
-        setState(() {});
-        pageController.jumpToPage(1);
+        // FileManagerController ctl = FileManagerController(
+        //   currentPath,
+        //   initOffset: offsetStore[currentPath] ?? 0,
+        // );
+        // _controllers[0] = ctl;
+        // setState(() {});
         // pageController
         //     .previousPage(
         //   duration: pageJumpDuration,
@@ -175,46 +174,70 @@ class _FileManagerWindowState extends State<FileManagerWindow>
         //     setState(() {});
         //   });
         // });
+        enterBackDir(currentPath);
         Log.e('offsetStore[currentPath] -> ${offsetStore[currentPath]}');
         fileSelectController?.updateCurrentDirPath(entity.parentPath);
       } else {
-        FileManagerController ctl = FileManagerController(entity.path);
+        // 目标路径为点击的文件节点的路径
         currentPath = entity.path;
-        setState(() {});
-        if (_controllers.length == 1) {
-          // offsetStore[entity.parentPath] =
-          //     _controllers.first.scrollController.offset;
-          Log.w('${pageController.page} ');
-          _controllers.add(ctl);
-          setState(() {});
-        } else {
-          // offsetStore[entity.parentPath] =
-          //     _controllers.first.scrollController.offset;
+        // offsetStore[entity.parentPath] =
+        //     _controllers.first.scrollController.offset;
+        // setState(() {});
+        // if (_controllers.length == 1) {
+        //   // 第一次进入二级文件夹
+        //   // offsetStore[entity.parentPath] =
+        //   //     _controllers.first.scrollController.offset;
+        //   Log.w('${pageController.page} ');
+        //   _controllers.add(ctl);
+        //   pageController
+        //       .nextPage(
+        //     duration: pageJumpDuration,
+        //     curve: Curves.easeIn,
+        //   )
+        //       .whenComplete(() {
+        //     // Future.delayed(Duration.zero, () {
+        //     //   setState(() {});
+        //     // });
+        //   });
+        //   setState(() {});
+        // } else {
+        //   // offsetStore[entity.parentPath] =
+        //   //     _controllers.first.scrollController.offset;
 
-          Log.e('${pageController.page} ');
-          setState(() {});
-          Log.e('${pageController.page} ');
-          _controllers[1] = ctl;
-          setState(() {});
-        }
-        pageController
-            .nextPage(
-          duration: pageJumpDuration,
-          curve: Curves.easeIn,
-        )
-            .whenComplete(() {
-          Future.delayed(Duration.zero, () {
-            _controllers.removeAt(0);
-            setState(() {});
-          });
-        });
+        //   Log.e('${pageController.page} ');
+        //   setState(() {});
+        //   Log.e('${pageController.page} ');
+        //   _controllers.add(ctl);
+        //   pageController
+        //       .nextPage(
+        //     duration: pageJumpDuration,
+        //     curve: Curves.easeIn,
+        //   )
+        //       .whenComplete(() {
+        //     Future.delayed(Duration.zero, () {
+        //       _controllers.removeAt(0);
+        //       setState(() {});
+        //     });
+        //   });
+        //   setState(() {});
+        // }
+        enterDir(entity.path);
         fileSelectController?.updateCurrentDirPath(entity.path);
       }
       Log.e('currentPath -> $currentPath');
     }
   }
 
+  void enterDir(String path) {
+    _controllers.first.updateFileNodes(path);
+  }
+
+  void enterBackDir(String path) {
+    _controllers.first.updateFileNodes(path);
+  }
+
   WillPopScope buldHome(BuildContext context) {
+    Log.w('${_controllers.length}');
     return WillPopScope(
       onWillPop: onWillPop,
       child: Material(
