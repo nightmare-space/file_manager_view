@@ -25,6 +25,12 @@ class FileSelectPage extends StatefulWidget {
 class _FileSelectPageState extends State<FileSelectPage> {
   FileSelectController clipboardController = Get.put(FileSelectController());
   @override
+  void initState() {
+    super.initState();
+    clipboardController.clearCheck();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
