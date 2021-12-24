@@ -98,7 +98,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
       },
       displacement: 1,
       child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         cacheExtent: 400,
         controller:
             ScrollController(initialScrollOffset: widget.initScrollOffset),
