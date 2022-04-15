@@ -14,8 +14,7 @@ dependencies:
     git: https://github.com/nightmare-space/global_repository
   path: ^1.8.0
   cupertino_icons: ^1.0.2
-  signale:
-    git: https://github.com/nightmare-space/signale
+  signale: ^0.0.6
   flutter_svg: ^0.22.0
 
 dev_dependencies:
