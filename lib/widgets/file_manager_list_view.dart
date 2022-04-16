@@ -127,6 +127,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
               // );
               widget.itemOnTap?.call(entity);
             },
+            
             onLongPress: () {
               widget.itemOnLongPress?.call(entity);
               // if (widget.windowType != WindowType.defaultType) {

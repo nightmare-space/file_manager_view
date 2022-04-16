@@ -1,8 +1,10 @@
 import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/v2/menu.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
 import 'package:file_manager_view/widgets/file_manager_window.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,7 +12,13 @@ import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({
+    Key key,
+    this.drawer = true,
+    this.path = '/sdcard',
+  }) : super(key: key);
+  final bool drawer;
+  final String path;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,10 +26,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FileSelectController fileSelectController = Get.put(FileSelectController());
-  FileManagerController fileManagerController = Get.put(
-    FileManagerController('/sdcard'),
-  );
+  FileManagerController fileManagerController;
   String path = '/sdcard';
+  @override
+  void initState() {
+    super.initState();
+    fileManagerController = Get.put(
+      FileManagerController(widget.path),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -33,165 +47,120 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: Column(
             children: [
-              SizedBox(
-                height: 48.w,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.w),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new),
-                      ),
-                      SizedBox(width: 4.w),
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.w),
-                        ),
-                        child: const Icon(Icons.arrow_forward_ios),
-                      ),
-                      SizedBox(width: 4.w),
-                      Expanded(
-                        child: Container(
-                          height: 40.w,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12.w),
-                          ),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: const Text(
-                                '/ sdcard ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.w),
-                        ),
-                        child: const Icon(Icons.apps),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              header(),
               SizedBox(height: 4.w),
               Expanded(
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 240.w,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DrawerItem(
-                            title: '根目录',
-                            iconData: Icons.home,
-                            groupValue: path,
-                            value: '/sdcard',
-                            onTap: (_) {
-                              path = _;
-                              fileManagerController.updateFileNodes(path);
-                              setState(() {});
-                            },
-                          ),
-                          DrawerItem(
-                            title: '文档',
-                            iconData: Icons.home,
-                            groupValue: path,
-                            value: '/sdcard/Documents',
-                            onTap: (_) {
-                              path = _;
-                              fileManagerController.updateFileNodes(path);
-                              setState(() {});
-                            },
-                          ),
-                          DrawerItem(
-                            title: '下载',
-                            iconData: Icons.home,
-                            groupValue: path,
-                            value: '/sdcard/Download',
-                            onTap: (_) {
-                              path = _;
-                              fileManagerController.updateFileNodes(path);
-                              setState(() {});
-                            },
-                          ),
-                          DrawerItem(
-                            title: '回收站',
-                            iconData: Icons.ac_unit_rounded,
-                            groupValue: path,
-                            value: '2',
-                            onTap: (_) {},
-                          ),
-                          SizedBox(height: 12.w),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: const Text(
-                              '设备',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                    if (widget.drawer)
+                      SizedBox(
+                        width: 240.w,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DrawerItem(
+                              title: '根目录',
+                              iconData: Icons.home,
+                              groupValue: path,
+                              value: '/sdcard',
+                              onTap: (_) {
+                                path = _;
+                                fileManagerController.updateFileNodes(path);
+                                setState(() {});
+                              },
+                            ),
+                            DrawerItem(
+                              title: '文档',
+                              iconData: Icons.home,
+                              groupValue: path,
+                              value: '/sdcard/Documents',
+                              onTap: (_) {
+                                path = _;
+                                fileManagerController.updateFileNodes(path);
+                                setState(() {});
+                              },
+                            ),
+                            DrawerItem(
+                              title: '下载',
+                              iconData: Icons.home,
+                              groupValue: path,
+                              value: '/sdcard/Download',
+                              onTap: (_) {
+                                path = _;
+                                fileManagerController.updateFileNodes(path);
+                                setState(() {});
+                              },
+                            ),
+                            DrawerItem(
+                              title: '回收站',
+                              iconData: Icons.ac_unit_rounded,
+                              groupValue: path,
+                              value: '2',
+                              onTap: (_) {},
+                            ),
+                            SizedBox(height: 12.w),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: const Text(
+                                '设备',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 12.w),
-                          DrawerItem(
-                            title: '外置储存',
-                            iconData: Icons.home,
-                            value: '2',
-                            onTap: (_) {},
-                          ),
-                          DrawerItem(
-                            title: '系统',
-                            iconData:
-                                Icons.sentiment_very_dissatisfied_outlined,
-                            value: '2',
-                            onTap: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.w),
+                            SizedBox(height: 12.w),
+                            DrawerItem(
+                              title: '外置储存',
+                              iconData: Icons.home,
+                              value: '2',
+                              onTap: (_) {},
+                            ),
+                            DrawerItem(
+                              title: '系统',
+                              iconData:
+                                  Icons.sentiment_very_dissatisfied_outlined,
+                              value: '2',
+                              onTap: (_) {},
+                            ),
+                          ],
                         ),
-                        child: FileManagerListView(
-                          key: Key(path),
-                          itemOnTap: (entity) {
-                            if (entity.name == '..') {
-                              fileManagerController.updateFileNodes(
-                                dirname(fileManagerController.dirPath),
-                              );
-                            } else {
-                              fileManagerController
-                                  .updateFileNodes(entity.path);
+                      ),
+                    Expanded(
+                      child: Material(
+                        borderRadius: BorderRadius.circular(12.w),
+                        color: Colors.white,
+                        child: Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            if (event.kind == PointerDeviceKind.mouse &&
+                                event.buttons == kSecondaryMouseButton) {
+                              Get.dialog(Menu());
                             }
                           },
-                          itemOnLongPress: (entity) {},
-                          controller: fileManagerController,
-                          windowType: WindowType.defaultType,
+                          child: FileManagerListView(
+                            key: Key(path),
+                            itemOnTap: (entity) {
+                              if (entity.isFile) {
+                                Get.dialog(Menu(
+                                  entity: entity,
+                                ));
+                                return;
+                              }
+                              if (entity.name == '..') {
+                                fileManagerController.updateFileNodes(
+                                  dirname(fileManagerController.dirPath),
+                                );
+                              } else {
+                                fileManagerController
+                                    .updateFileNodes(entity.path);
+                              }
+                            },
+                            itemOnLongPress: (entity) {
+                              Get.dialog(Menu());
+                            },
+                            controller: fileManagerController,
+                            windowType: WindowType.defaultType,
+                          ),
                         ),
                       ),
                     ),
@@ -200,6 +169,74 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox header() {
+    return SizedBox(
+      height: 48.w,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 0.w),
+        child: Row(
+          children: [
+            Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.w),
+              ),
+              child: const Icon(Icons.arrow_back_ios_new),
+            ),
+            SizedBox(width: 4.w),
+            Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.w),
+              ),
+              child: const Icon(Icons.arrow_forward_ios),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Container(
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.w),
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: GetBuilder<FileManagerController>(
+                      builder: (context) {
+                        return Text(
+                          context.dirPath,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.w),
+              ),
+              child: const Icon(Icons.apps),
+            ),
+          ],
         ),
       ),
     );

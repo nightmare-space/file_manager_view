@@ -19,10 +19,11 @@ class DirectoryBrowser extends FileEntity implements Directory {
     bool verbose = true,
   }) async {
     Response<String> response;
-    String perfix = url;
-    // if (kDebugMode) {
-    //   perfix = 'http://192.168.247.102:20000';
-    // }
+    Uri uri = Uri.tryParse(url);
+    String perfix = 'http://${uri.host}:20000';
+    if (kIsWeb && kDebugMode) {
+      perfix = 'http://192.168.247.102:20000';
+    }
     try {
       response = await Dio().get<String>(
         '$perfix/getdir',

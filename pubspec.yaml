@@ -8,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  url_launcher: ^6.0.4
   get: ^4.1.4
   dio: ^4.0.0
   global_repository:

@@ -2,11 +2,12 @@ import 'package:file_manager_view/core/io/extension/extension.dart';
 import 'package:file_manager_view/core/io/interface/directory.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:file_manager_view/core/io/util/directory_factory.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'observable.dart';
 
-class FileManagerController with Observable {
+class FileManagerController extends GetxController {
   FileManagerController(
     this.dirPath, {
     this.initOffset = 0,
@@ -26,7 +27,7 @@ class FileManagerController with Observable {
       dirPath,
     );
     fileNodes = await dir.listSort();
-    notifyListeners();
+    update();
     // 在一次获取后异步更新文件节点的其他参数，这个过程是非常快的
     // getNodeFullArgs();
   }
@@ -42,6 +43,6 @@ class FileManagerController with Observable {
   }
   void updatePath(String path) {
     dirPath = path;
-    notifyListeners();
+    update();
   }
 }
