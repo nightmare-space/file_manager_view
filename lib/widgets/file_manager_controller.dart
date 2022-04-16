@@ -1,6 +1,7 @@
-import 'package:file_manager_view/extension/directory_extension.dart';
-import 'package:file_manager_view/file_manager_view.dart';
-import 'package:flutter/material.dart';
+import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/interface/directory.dart';
+import 'package:file_manager_view/core/io/interface/file_entity.dart';
+import 'package:file_manager_view/core/io/util/directory_factory.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'observable.dart';
@@ -20,13 +21,11 @@ class FileManagerController with Observable {
 
   Future<void> updateFileNodes([String path]) async {
     dirPath = path ?? dirPath;
-    print('_getFileNodes $dirPath');
     // 获取文件列表和刷新页面
-    final Directory dir = Directory.getPlatformDirectory(
+    final Directory dir = DirectoryFactory.getPlatformDirectory(
       dirPath,
     );
     fileNodes = await dir.listSort();
-    print('${this.hashCode} _getFileNodes后');
     notifyListeners();
     // 在一次获取后异步更新文件节点的其他参数，这个过程是非常快的
     // getNodeFullArgs();

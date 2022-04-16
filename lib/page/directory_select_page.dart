@@ -3,7 +3,6 @@ import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import '../widgets/file_manager_controller.dart';
 import '../widgets/file_manager_window.dart';
 
 /// Created By Nightmare on 2021/7/21
@@ -29,26 +28,25 @@ class _DirectorySelectPageState extends State<DirectorySelectPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: NiIconButton(
           onTap: () {
             Navigator.of(context).pop();
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back_ios_new,
             color: Colors.black,
           ),
         ),
-        title: Text(
+        title: const Text(
           '选择文件夹',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: FileManagerWindow(
               windowType: WindowType.selectDirectory,
               initPath: '/storage/emulated/0',
@@ -61,7 +59,7 @@ class _DirectorySelectPageState extends State<DirectorySelectPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Material(
-                    color: Color(0xffebebed),
+                    color: const Color(0xffebebed),
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
                       onTap: () {
@@ -71,8 +69,8 @@ class _DirectorySelectPageState extends State<DirectorySelectPage> {
                       child: Container(
                         width: 160,
                         height: 42,
-                        decoration: BoxDecoration(),
-                        child: Center(
+                        decoration: const BoxDecoration(),
+                        child: const Center(
                           child: Text(
                             '取消',
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -91,7 +89,7 @@ class _DirectorySelectPageState extends State<DirectorySelectPage> {
                         );
                       },
                       borderRadius: BorderRadius.circular(10),
-                      child: Container(
+                      child: const SizedBox(
                         width: 160,
                         height: 42,
                         child: Center(

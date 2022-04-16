@@ -1,15 +1,16 @@
+import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
-import 'package:file_manager_view/extension/file_entity_extension.dart';
-import 'package:file_manager_view/file_manager_view.dart';
+import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/interface/file_entity.dart';
+import 'package:file_manager_view/v2/icon.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'file_item_suffix.dart';
 import 'file_manager_window.dart';
-import 'gesture_handler.dart';
-import 'item_head.dart';
 
 typedef FileOnTap = void Function(FileEntity fileEntity);
 typedef FileOnLongPress = void Function(FileEntity fileEntity);
@@ -90,7 +91,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
   @override
   Widget build(BuildContext context) {
     if (widget.controller.fileNodes.isEmpty) {
-      return SizedBox();
+      return const SizedBox();
     }
     return RefreshIndicator(
       onRefresh: () async {
@@ -103,7 +104,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
         controller:
             ScrollController(initialScrollOffset: widget.initScrollOffset),
         itemCount: widget.controller.fileNodes.length,
-        padding: EdgeInsets.only(bottom: 100),
+        padding: const EdgeInsets.only(bottom: 100),
         //不然会有一个距离上面的边距
         itemBuilder: (BuildContext context, int index) {
           final FileEntity entity = widget.controller.fileNodes[index];
@@ -254,12 +255,19 @@ class _FileItemState extends State<FileItem>
     final List<String> _tmp = fileEntity.path.split(' -> '); //有的有符号链接
     final String currentFileName = _tmp.first.split('/').last; //取前面那个就没错
     // Log.d(fileEntity);
-    final Widget _iconData = getWidgetFromExtension(
-      fileEntity,
-      context,
-      fileEntity.isFile,
-    ); //显示的头部件
-    return Container(
+
+    Widget icon;
+    if (fileEntity.isDirectory) {
+      icon = Image.asset(
+        '${Config.flutterPackage}assets/icon/dir.png',
+        width: 20.0,
+        height: 20.0,
+        color: Theme.of(context).primaryColor,
+      );
+    } else {
+      icon = getIconByExt(fileEntity.path);
+    }
+    return SizedBox(
       height: 54,
       child: Stack(
         children: <Widget>[
@@ -303,11 +311,11 @@ class _FileItemState extends State<FileItem>
                         children: <Widget>[
                           // header icon
                           SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: _iconData,
+                            width: 30.w,
+                            height: 30.w,
+                            child: icon,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           Expanded(
@@ -324,7 +332,7 @@ class _FileItemState extends State<FileItem>
                                       maxLines: 1,
                                       softWrap: false,
                                       overflow: TextOverflow.fade,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -340,7 +348,7 @@ class _FileItemState extends State<FileItem>
                                     child: Text(
                                       '${fileEntity.modified} ${fileEntity.itemsNumber} ${fileEntity.mode} ${fileEntity.size}',
                                       maxLines: 1,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.black54,
                                       ),

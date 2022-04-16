@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
-import '../widgets/file_manager_controller.dart';
 import '../widgets/file_manager_window.dart';
 
 /// Created By Nightmare on 2021/7/20
@@ -43,19 +42,19 @@ class _FileSelectPageState extends State<FileSelectPage> {
           onTap: () {
             Navigator.of(context).pop();
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back_ios_new,
             color: Colors.black,
           ),
         ),
-        title: Text(
+        title: const Text(
           '选择文件',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: FileManagerWindow(
               windowType: WindowType.selectFile,
               initPath: '/storage/emulated/0',
@@ -68,7 +67,7 @@ class _FileSelectPageState extends State<FileSelectPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Material(
-                    color: Color(0xffebebed),
+                    color: const Color(0xffebebed),
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
                       onTap: () {
@@ -78,8 +77,8 @@ class _FileSelectPageState extends State<FileSelectPage> {
                       child: Container(
                         width: 160,
                         height: 42,
-                        decoration: BoxDecoration(),
-                        child: Center(
+                        decoration: const BoxDecoration(),
+                        child: const Center(
                           child: Text(
                             '取消',
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -98,7 +97,7 @@ class _FileSelectPageState extends State<FileSelectPage> {
                         );
                       },
                       borderRadius: BorderRadius.circular(10),
-                      child: Container(
+                      child: const SizedBox(
                         width: 160,
                         height: 42,
                         child: Center(

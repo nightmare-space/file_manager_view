@@ -1,4 +1,4 @@
-import 'package:file_manager_view/file_manager_view.dart';
+import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:get/get.dart';
 
 class FileSelectController extends GetxController {

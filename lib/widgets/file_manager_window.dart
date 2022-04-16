@@ -1,11 +1,9 @@
 import 'package:file_manager_view/controller/clipboard_controller.dart';
-import 'package:file_manager_view/extension/file_entity_extension.dart';
-import 'package:file_manager_view/file_manager_view.dart';
-import 'package:file_manager_view/global/controller/clipboard_controller.dart';
-import 'package:file_manager_view/global/instance/global.dart';
+import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/interface/directory.dart';
+import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as path;
@@ -40,7 +38,7 @@ class FileManagerWindow extends StatefulWidget {
 
 class _FileManagerWindowState extends State<FileManagerWindow>
     with TickerProviderStateMixin {
-  List<FileManagerController> _controllers = [];
+  final List<FileManagerController> _controllers = [];
   //动画控制器，用来控制文件夹进入时的透明度
   AnimationController _animationController;
   //透明度动画补间值
@@ -237,11 +235,10 @@ class _FileManagerWindowState extends State<FileManagerWindow>
   }
 
   WillPopScope buldHome(BuildContext context) {
-    Log.w('${_controllers.length}');
     return WillPopScope(
       onWillPop: onWillPop,
       child: Material(
-        color: const Color(0xfff5f5f7),
+        color: Colors.transparent,
         elevation: 0.0,
         child: FadeTransition(
           opacity: _opacityTween,

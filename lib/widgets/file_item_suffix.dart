@@ -1,7 +1,6 @@
-import 'package:file_manager_view/extension/file_entity_extension.dart';
-import 'package:file_manager_view/file_manager_view.dart';
+import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:global_repository/global_repository.dart';
 
 class FileItemSuffix extends StatelessWidget {
   const FileItemSuffix({Key key, this.fileNode}) : super(key: key);
@@ -10,7 +9,7 @@ class FileItemSuffix extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (fileNode.name.endsWith('_src') && fileNode.isDirectory)
+    if (fileNode.name.endsWith('_src') && fileNode.isDirectory) {
       return Align(
         alignment: Alignment.centerRight,
         child: IconButton(
@@ -26,7 +25,8 @@ class FileItemSuffix extends StatelessWidget {
           },
         ),
       );
-    if (fileNode.name.endsWith('apk'))
+    }
+    if (fileNode.name.endsWith('apk')) {
       return Align(
         alignment: Alignment.centerRight,
         child: IconButton(
@@ -42,6 +42,7 @@ class FileItemSuffix extends StatelessWidget {
           },
         ),
       );
+    }
     return const SizedBox();
   }
 }
