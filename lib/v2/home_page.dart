@@ -1,5 +1,6 @@
 import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/v2/menu.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Row(
                   children: [
-                    if (widget.drawer)
+                    if (widget.drawer && !GetPlatform.isAndroid)
                       SizedBox(
                         width: 240.w,
                         child: Column(
@@ -133,10 +134,7 @@ class _HomePageState extends State<HomePage> {
                         child: FileManagerListView(
                           key: Key(path),
                           itemOnTap: (entity) {
-                            if (entity.isFile) {
-                              Get.dialog(Menu(
-                                entity: entity,
-                              ));
+                            if (entity is File) {
                               return;
                             }
                             if (entity.name == '..') {
@@ -148,7 +146,11 @@ class _HomePageState extends State<HomePage> {
                                   .updateFileNodes(entity.path);
                             }
                           },
-                          itemOnLongPress: (entity) {},
+                          itemOnLongPress: (entity, offset) {
+                            Get.dialog(Menu(
+                              offset: offset,
+                            ));
+                          },
                           onRightMouseClick: (file, offset) {
                             Get.dialog(Menu(
                               offset: offset,

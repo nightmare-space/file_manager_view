@@ -43,7 +43,7 @@ Widget getIconByExt(String path) {
       height: 36.w,
     );
   } else if (path.isImg) {
-    if (fileManagerController.dir is DirectoryBrowser) {
+    if (fileManagerController.dir is DirectoryBrowser && GetPlatform.isWeb) {
       Log.i('path : $path');
       Uri uri = Uri.tryParse(urlPrefix);
       String perfix = 'http://${uri.host}:8000';

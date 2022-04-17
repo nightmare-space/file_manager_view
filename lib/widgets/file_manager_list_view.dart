@@ -14,7 +14,7 @@ import 'file_item_suffix.dart';
 import 'file_manager_window.dart';
 
 typedef FileOnTap = void Function(FileEntity fileEntity);
-typedef FileOnLongPress = void Function(FileEntity fileEntity);
+typedef FileOnLongPress = void Function(FileEntity fileEntity, Offset offset);
 typedef OnRightMouseClick = void Function(FileEntity fileEntity, Offset offset);
 
 class FileManagerListView extends StatefulWidget {
@@ -83,6 +83,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
   @override
   void initState() {
     super.initState();
+    Get.put(widget.controller);
     initFMPage();
   }
 
@@ -121,42 +122,47 @@ class _FileManagerListViewState extends State<FileManagerListView> {
                   widget.onRightMouseClick?.call(entity, offset);
                 }
               },
-              child: MouseRegion(
-                onHover: (event) {
-                  offset = event.position;
+              child: GestureDetector(
+                onPanDown: (details) {
+                  offset = details.globalPosition;
                 },
-                child: FileItem(
-                  key: Key(entity.path),
-                  windowType: widget.windowType,
-                  controller: widget.controller,
-                  onTap: () {
-                    // if (widget.windowType == WindowType.selectFile && entity.isFile) {
-                    //   // Navigator.pop(
-                    //   //   context,
-                    //   //   '${_controller.dirPath}/${entity.fileName}',
-                    //   // );
-                    //   return;
-                    // }
-                    // itemOnTap(
-                    //   entity: entity,
-                    //   controller: widget.controller,
-                    //   scrollController: scrollController,
-                    //   context: context,
-                    // );
-                    widget.itemOnTap?.call(entity);
+                child: MouseRegion(
+                  onHover: (event) {
+                    offset = event.position;
                   },
-                  onLongPress: () {
-                    widget.itemOnLongPress?.call(entity);
-                    // if (widget.windowType != WindowType.defaultType) {
-                    //   return;
-                    // }
-                    // itemOnLongPress(
-                    //   context: context,
-                    //   entity: entity,
-                    //   controller: _controller,
-                    // );
-                  },
-                  fileEntity: entity,
+                  child: FileItem(
+                    key: Key(entity.path),
+                    windowType: widget.windowType,
+                    controller: widget.controller,
+                    onTap: () {
+                      // if (widget.windowType == WindowType.selectFile && entity.isFile) {
+                      //   // Navigator.pop(
+                      //   //   context,
+                      //   //   '${_controller.dirPath}/${entity.fileName}',
+                      //   // );
+                      //   return;
+                      // }
+                      // itemOnTap(
+                      //   entity: entity,
+                      //   controller: widget.controller,
+                      //   scrollController: scrollController,
+                      //   context: context,
+                      // );
+                      widget.itemOnTap?.call(entity);
+                    },
+                    onLongPress: () {
+                      widget.itemOnLongPress?.call(entity, offset);
+                      // if (widget.windowType != WindowType.defaultType) {
+                      //   return;
+                      // }
+                      // itemOnLongPress(
+                      //   context: context,
+                      //   entity: entity,
+                      //   controller: _controller,
+                      // );
+                    },
+                    fileEntity: entity,
+                  ),
                 ),
               ),
             );

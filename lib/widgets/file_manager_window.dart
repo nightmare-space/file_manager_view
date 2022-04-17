@@ -265,7 +265,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
                 child: FileManagerListView(
                   key: Key(_controllers[index].hashCode.toString()),
                   itemOnTap: handleTap,
-                  itemOnLongPress: (entity) {},
+                  // itemOnLongPress: (entity) {},
                   controller: _controllers[index],
                   windowType: widget.windowType,
                 ),
