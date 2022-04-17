@@ -4,6 +4,7 @@ import 'package:file_manager_view/core/io/extension/extension.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:file_manager_view/v2/icon.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ import 'file_manager_window.dart';
 
 typedef FileOnTap = void Function(FileEntity fileEntity);
 typedef FileOnLongPress = void Function(FileEntity fileEntity);
+typedef OnRightMouseClick = void Function(FileEntity fileEntity, Offset offset);
 
 class FileManagerListView extends StatefulWidget {
   const FileManagerListView({
@@ -23,12 +25,14 @@ class FileManagerListView extends StatefulWidget {
     this.itemOnTap,
     this.itemOnLongPress,
     this.initScrollOffset = 0,
+    this.onRightMouseClick,
   }) : super(key: key);
   final FileManagerController controller;
   final WindowType windowType;
   final FileOnTap itemOnTap;
   final FileOnLongPress itemOnLongPress;
   final double initScrollOffset;
+  final OnRightMouseClick onRightMouseClick;
 
   @override
   _FileManagerListViewState createState() => _FileManagerListViewState();
@@ -88,6 +92,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     super.dispose();
   }
 
+  Offset offset;
   @override
   Widget build(BuildContext context) {
     if (widget.controller.fileNodes.isEmpty) {
@@ -108,39 +113,54 @@ class _FileManagerListViewState extends State<FileManagerListView> {
         //不然会有一个距离上面的边距
         itemBuilder: (BuildContext context, int index) {
           final FileEntity entity = widget.controller.fileNodes[index];
-          return FileItem(
-            windowType: widget.windowType,
-            controller: widget.controller,
-            onTap: () {
-              // if (widget.windowType == WindowType.selectFile && entity.isFile) {
-              //   // Navigator.pop(
-              //   //   context,
-              //   //   '${_controller.dirPath}/${entity.fileName}',
-              //   // );
-              //   return;
-              // }
-              // itemOnTap(
-              //   entity: entity,
-              //   controller: widget.controller,
-              //   scrollController: scrollController,
-              //   context: context,
-              // );
-              widget.itemOnTap?.call(entity);
-            },
-            
-            onLongPress: () {
-              widget.itemOnLongPress?.call(entity);
-              // if (widget.windowType != WindowType.defaultType) {
-              //   return;
-              // }
-              // itemOnLongPress(
-              //   context: context,
-              //   entity: entity,
-              //   controller: _controller,
-              // );
-            },
-            fileEntity: entity,
-          );
+          return Builder(builder: (context) {
+            return Listener(
+              onPointerDown: (PointerDownEvent event) {
+                if (event.kind == PointerDeviceKind.mouse &&
+                    event.buttons == kSecondaryMouseButton) {
+                  widget.onRightMouseClick?.call(entity, offset);
+                }
+              },
+              child: MouseRegion(
+                onHover: (event) {
+                  offset = event.position;
+                },
+                child: FileItem(
+                  key: Key(entity.path),
+                  windowType: widget.windowType,
+                  controller: widget.controller,
+                  onTap: () {
+                    // if (widget.windowType == WindowType.selectFile && entity.isFile) {
+                    //   // Navigator.pop(
+                    //   //   context,
+                    //   //   '${_controller.dirPath}/${entity.fileName}',
+                    //   // );
+                    //   return;
+                    // }
+                    // itemOnTap(
+                    //   entity: entity,
+                    //   controller: widget.controller,
+                    //   scrollController: scrollController,
+                    //   context: context,
+                    // );
+                    widget.itemOnTap?.call(entity);
+                  },
+                  onLongPress: () {
+                    widget.itemOnLongPress?.call(entity);
+                    // if (widget.windowType != WindowType.defaultType) {
+                    //   return;
+                    // }
+                    // itemOnLongPress(
+                    //   context: context,
+                    //   entity: entity,
+                    //   controller: _controller,
+                    // );
+                  },
+                  fileEntity: entity,
+                ),
+              ),
+            );
+          });
         },
       ),
     );

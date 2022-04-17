@@ -130,37 +130,32 @@ class _HomePageState extends State<HomePage> {
                       child: Material(
                         borderRadius: BorderRadius.circular(12.w),
                         color: Colors.white,
-                        child: Listener(
-                          onPointerDown: (PointerDownEvent event) {
-                            if (event.kind == PointerDeviceKind.mouse &&
-                                event.buttons == kSecondaryMouseButton) {
-                              Get.dialog(Menu());
+                        child: FileManagerListView(
+                          key: Key(path),
+                          itemOnTap: (entity) {
+                            if (entity.isFile) {
+                              Get.dialog(Menu(
+                                entity: entity,
+                              ));
+                              return;
+                            }
+                            if (entity.name == '..') {
+                              fileManagerController.updateFileNodes(
+                                dirname(fileManagerController.dirPath),
+                              );
+                            } else {
+                              fileManagerController
+                                  .updateFileNodes(entity.path);
                             }
                           },
-                          child: FileManagerListView(
-                            key: Key(path),
-                            itemOnTap: (entity) {
-                              if (entity.isFile) {
-                                Get.dialog(Menu(
-                                  entity: entity,
-                                ));
-                                return;
-                              }
-                              if (entity.name == '..') {
-                                fileManagerController.updateFileNodes(
-                                  dirname(fileManagerController.dirPath),
-                                );
-                              } else {
-                                fileManagerController
-                                    .updateFileNodes(entity.path);
-                              }
-                            },
-                            itemOnLongPress: (entity) {
-                              Get.dialog(Menu());
-                            },
-                            controller: fileManagerController,
-                            windowType: WindowType.defaultType,
-                          ),
+                          itemOnLongPress: (entity) {},
+                          onRightMouseClick: (file, offset) {
+                            Get.dialog(Menu(
+                              offset: offset,
+                            ));
+                          },
+                          controller: fileManagerController,
+                          windowType: WindowType.defaultType,
                         ),
                       ),
                     ),

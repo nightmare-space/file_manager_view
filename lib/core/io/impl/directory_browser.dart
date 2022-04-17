@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/interface/directory.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
+import 'package:file_manager_view/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:global_repository/global_repository.dart';
 
@@ -19,14 +20,10 @@ class DirectoryBrowser extends FileEntity implements Directory {
     bool verbose = true,
   }) async {
     Response<String> response;
-    Uri uri = Uri.tryParse(url);
-    String perfix = 'http://${uri.host}:20000';
-    if (kIsWeb && kDebugMode) {
-      perfix = 'http://192.168.247.102:20000';
-    }
+
     try {
       response = await Dio().get<String>(
-        '$perfix/getdir',
+        '$urlPrefix/getdir',
         queryParameters: {
           'path': path,
         },

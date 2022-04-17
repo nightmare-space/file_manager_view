@@ -16,14 +16,14 @@ class FileManagerController extends GetxController {
   }
   final double initOffset;
   String dirPath;
-
+  Directory dir;
   //保存所有文件的节点
   List<FileEntity> fileNodes = <FileEntity>[];
 
   Future<void> updateFileNodes([String path]) async {
     dirPath = path ?? dirPath;
     // 获取文件列表和刷新页面
-    final Directory dir = DirectoryFactory.getPlatformDirectory(
+    dir = DirectoryFactory.getPlatformDirectory(
       dirPath,
     );
     fileNodes = await dir.listSort();

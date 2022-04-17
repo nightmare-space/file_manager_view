@@ -1,3 +1,5 @@
+import 'package:file_manager_view/core/io/document/document.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,15 @@ import 'core/io/util/directory_factory.dart';
 import 'core/server/file_server.dart';
 import 'v2/home_page.dart';
 import 'page/file_select_page.dart';
+
+String get urlPrefix {
+  Uri uri = Uri.tryParse(url);
+  String perfix = 'http://${uri.host}:20000';
+  if (kIsWeb && kDebugMode) {
+    perfix = 'http://192.168.184.102:20000';
+  }
+  return perfix;
+}
 
 Future<void> main() async {
   // debugPaintLayerBordersEnabled = true; // 显示层级边界÷
