@@ -8,7 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  better_player: ^0.0.81
+  shelf_static: ^1.0.0
+  shelf_router: ^1.0.0
   url_launcher: ^6.0.4
   get: ^4.1.4
   dio: ^4.0.0

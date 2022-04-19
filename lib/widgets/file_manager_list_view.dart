@@ -16,6 +16,10 @@ import 'file_manager_window.dart';
 typedef FileOnTap = void Function(FileEntity fileEntity);
 typedef FileOnLongPress = void Function(FileEntity fileEntity, Offset offset);
 typedef OnRightMouseClick = void Function(FileEntity fileEntity, Offset offset);
+enum WindowDisplayType {
+  list,
+  grid,
+}
 
 class FileManagerListView extends StatefulWidget {
   const FileManagerListView({
@@ -26,13 +30,16 @@ class FileManagerListView extends StatefulWidget {
     this.itemOnLongPress,
     this.initScrollOffset = 0,
     this.onRightMouseClick,
+    this.displayType = WindowDisplayType.list,
   }) : super(key: key);
+
   final FileManagerController controller;
   final WindowType windowType;
   final FileOnTap itemOnTap;
   final FileOnLongPress itemOnLongPress;
   final double initScrollOffset;
   final OnRightMouseClick onRightMouseClick;
+  final WindowDisplayType displayType;
 
   @override
   _FileManagerListViewState createState() => _FileManagerListViewState();
@@ -93,11 +100,42 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     super.dispose();
   }
 
+  double get width {
+    return MediaQuery.of(context).size.width / 4;
+  }
+
+  int get count {
+    return MediaQuery.of(context).size.width ~/ 72.w;
+  }
+
   Offset offset;
+
+  void handleOnTap() {}
   @override
   Widget build(BuildContext context) {
     if (widget.controller.fileNodes.isEmpty) {
       return const SizedBox();
+    }
+    if (widget.displayType == WindowDisplayType.grid) {
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: count,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          childAspectRatio: 0.8,
+        ),
+        physics: const BouncingScrollPhysics(),
+        itemCount: widget.controller.fileNodes.length,
+        itemBuilder: (BuildContext context, int index) {
+          final FileEntity entity = widget.controller.fileNodes[index];
+          return GridFileItem(
+            entity: entity,
+            onTap: () {
+              widget.itemOnTap?.call(entity);
+            },
+          );
+        },
+      );
     }
     return RefreshIndicator(
       onRefresh: () async {
@@ -135,31 +173,10 @@ class _FileManagerListViewState extends State<FileManagerListView> {
                     windowType: widget.windowType,
                     controller: widget.controller,
                     onTap: () {
-                      // if (widget.windowType == WindowType.selectFile && entity.isFile) {
-                      //   // Navigator.pop(
-                      //   //   context,
-                      //   //   '${_controller.dirPath}/${entity.fileName}',
-                      //   // );
-                      //   return;
-                      // }
-                      // itemOnTap(
-                      //   entity: entity,
-                      //   controller: widget.controller,
-                      //   scrollController: scrollController,
-                      //   context: context,
-                      // );
                       widget.itemOnTap?.call(entity);
                     },
                     onLongPress: () {
                       widget.itemOnLongPress?.call(entity, offset);
-                      // if (widget.windowType != WindowType.defaultType) {
-                      //   return;
-                      // }
-                      // itemOnLongPress(
-                      //   context: context,
-                      //   entity: entity,
-                      //   controller: _controller,
-                      // );
                     },
                     fileEntity: entity,
                   ),
@@ -168,6 +185,60 @@ class _FileManagerListViewState extends State<FileManagerListView> {
             );
           });
         },
+      ),
+    );
+  }
+}
+
+class GridFileItem extends StatefulWidget {
+  const GridFileItem({
+    Key key,
+    this.entity,
+    this.onTap,
+  }) : super(key: key);
+  final FileEntity entity;
+  final void Function() onTap;
+
+  @override
+  State<GridFileItem> createState() => _GridFileItemState();
+}
+
+class _GridFileItemState extends State<GridFileItem> {
+  @override
+  Widget build(BuildContext context) {
+    FileEntity fileEntity = widget.entity;
+    Widget icon;
+    if (fileEntity.isDirectory) {
+      icon = Image.asset(
+        '${Config.flutterPackage}assets/icon/dir.png',
+        width: 32.w,
+        height: 32.w,
+      );
+    } else {
+      icon = getIconByExt(fileEntity.path);
+    }
+    return InkWell(
+      onTap: () {
+        widget.onTap?.call();
+      },
+      child: SizedBox(
+        width: 72.w,
+        height: 72.w,
+        // color: Colors.red,
+        child: Column(
+          children: [
+            SizedBox(height: 12.w),
+            icon,
+            SizedBox(height: 4.w),
+            Text(
+              fileEntity.name,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 10.w,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -289,7 +360,6 @@ class _FileItemState extends State<FileItem>
         '${Config.flutterPackage}assets/icon/dir.png',
         width: 20.0,
         height: 20.0,
-        color: Theme.of(context).primaryColor,
       );
     } else {
       icon = getIconByExt(fileEntity.path);

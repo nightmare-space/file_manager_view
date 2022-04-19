@@ -19,7 +19,6 @@ class Server {
       request.uri;
       switch (request.uri.path) {
         case '/getdir':
-          Log.i(request.uri.queryParameters);
           String path = request.uri.queryParameters['path'];
           
           String lsPath = 'ls';
@@ -34,7 +33,7 @@ class Server {
             '$lsPath -aog "$path"\n',
           );
           lsOut.split('\n').forEach((element) {
-            Log.d(element);
+            // Log.d(element);
           });
           // 删除第一行 -> total xxx
           fullmessage = lsOut.split('\n')..removeAt(0);

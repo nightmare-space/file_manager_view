@@ -110,7 +110,7 @@ List<FileEntity> getFilesFrom(List<String> data, String path) {
   if (currentIndex == -1) {
     fileNodes.add(DirectoryFactory.getPlatformDirectory('..'));
   }
-  Log.i('currentIndex-->$currentIndex');
+  // Log.i('currentIndex-->$currentIndex');
 
   // ls 命令输出有空格上的对齐，不能用 list.split 然后以多个空格分开的方式来解析数据
   // 因为有的文件(夹)存在空格
@@ -119,7 +119,7 @@ List<FileEntity> getFilesFrom(List<String> data, String path) {
       RegExp(':[0-9][0-9] '),
     ); //获取文件名开始的地址
     startIndex += 4;
-    Log.i('startIndex===>>>$startIndex');
+    // Log.i('startIndex===>>>$startIndex');
 
     if (path == '/') {
       //如果当前路径已经是/就不需要再加一个/了

@@ -108,6 +108,38 @@ class _MenuState extends State<Menu> {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () async {
+                        Uri uri = Uri.tryParse(url);
+                        String perfix = 'http://${uri.host}:8000';
+                        String path =
+                            widget.entity.path.replaceAll('/sdcard', '');
+                        await canLaunch(
+                          Uri.encodeFull(
+                            '$perfix$path',
+                          ),
+                        )
+                            ? await launch(
+                                Uri.encodeFull('$perfix$path'),
+                              )
+                            : throw 'Could not launch $url';
+                        Navigator.of(context).pop();
+                      },
+                      child: SizedBox(
+                        height: 48.w,
+                        child: Align(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: Text(
+                              '重命名',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

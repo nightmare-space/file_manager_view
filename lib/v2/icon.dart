@@ -44,11 +44,9 @@ Widget getIconByExt(String path) {
     );
   } else if (path.isImg) {
     if (fileManagerController.dir is DirectoryBrowser && GetPlatform.isWeb) {
-      Log.i('path : $path');
       Uri uri = Uri.tryParse(urlPrefix);
       String perfix = 'http://${uri.host}:8000';
       path = (perfix + path).replaceAll('/sdcard', '');
-      Log.i('path : $path');
     }
     return Hero(
       tag: path,

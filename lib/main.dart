@@ -1,9 +1,7 @@
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'config/config.dart';
@@ -11,6 +9,7 @@ import 'core/io/interface/directory.dart';
 import 'core/io/interface/file_entity.dart';
 import 'core/io/util/directory_factory.dart';
 import 'core/server/file_server.dart';
+import 'utils/shelf_static.dart';
 import 'v2/home_page.dart';
 import 'page/file_select_page.dart';
 
@@ -31,6 +30,7 @@ Future<void> main() async {
   runApp(const MyApp());
   StatusBarUtil.transparent();
   if (!GetPlatform.isWeb) {
+    ShelfStatic.start();
     await Server.start();
   }
 }
@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xff57affc),
         ),
       ),
+      defaultTransition: Transition.fadeIn,
       home: const HomePage(),
     );
   }
