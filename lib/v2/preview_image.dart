@@ -21,7 +21,6 @@ class _PreviewImageState extends State<PreviewImage> {
   @override
   void initState() {
     super.initState();
-    path = getRemotePath(widget.path);
   }
 
   @override
@@ -38,9 +37,9 @@ class _PreviewImageState extends State<PreviewImage> {
               onTap: () {
                 Get.back();
               },
-              child: path.startsWith('http')
-                  ? Image.network(path)
-                  : Image.file(File(path)),
+              child: widget.path.startsWith('http')
+                  ? Image.network(widget.path)
+                  : Image.file(File(widget.path)),
             ),
           ),
           SafeArea(

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:keframe/frame_separate_widget.dart';
+import 'package:keframe/size_cache_widget.dart';
 
 import 'file_item_suffix.dart';
 import 'file_manager_window.dart';
@@ -100,12 +102,9 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     super.dispose();
   }
 
-  double get width {
-    return MediaQuery.of(context).size.width / 4;
-  }
-
   int get count {
-    return MediaQuery.of(context).size.width ~/ 72.w;
+    Log.i((414.w - 20.w) / 84.w);
+    return (MediaQuery.of(context).size.width - 20.w) ~/ 78.w;
   }
 
   Offset offset;
@@ -126,6 +125,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
         ),
         physics: const BouncingScrollPhysics(),
         itemCount: widget.controller.fileNodes.length,
+        padding: EdgeInsets.only(top: 10.w),
         itemBuilder: (BuildContext context, int index) {
           final FileEntity entity = widget.controller.fileNodes[index];
           return GridFileItem(
@@ -142,49 +142,57 @@ class _FileManagerListViewState extends State<FileManagerListView> {
         widget.controller.updateFileNodes();
       },
       displacement: 1,
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        cacheExtent: 400,
-        controller:
-            ScrollController(initialScrollOffset: widget.initScrollOffset),
-        itemCount: widget.controller.fileNodes.length,
-        padding: const EdgeInsets.only(bottom: 100),
-        //不然会有一个距离上面的边距
-        itemBuilder: (BuildContext context, int index) {
-          final FileEntity entity = widget.controller.fileNodes[index];
-          return Builder(builder: (context) {
-            return Listener(
-              onPointerDown: (PointerDownEvent event) {
-                if (event.kind == PointerDeviceKind.mouse &&
-                    event.buttons == kSecondaryMouseButton) {
-                  widget.onRightMouseClick?.call(entity, offset);
-                }
-              },
-              child: GestureDetector(
-                onPanDown: (details) {
-                  offset = details.globalPosition;
-                },
-                child: MouseRegion(
-                  onHover: (event) {
-                    offset = event.position;
-                  },
-                  child: FileItem(
-                    key: Key(entity.path),
-                    windowType: widget.windowType,
-                    controller: widget.controller,
-                    onTap: () {
-                      widget.itemOnTap?.call(entity);
-                    },
-                    onLongPress: () {
-                      widget.itemOnLongPress?.call(entity, offset);
-                    },
-                    fileEntity: entity,
-                  ),
-                ),
+      child: SizeCacheWidget(
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          cacheExtent: 400,
+          controller:
+              ScrollController(initialScrollOffset: widget.initScrollOffset),
+          itemCount: widget.controller.fileNodes.length,
+          padding: EdgeInsets.only(bottom: 100.w),
+          //不然会有一个距离上面的边距
+          itemBuilder: (BuildContext context, int index) {
+            final FileEntity entity = widget.controller.fileNodes[index];
+            return FrameSeparateWidget(
+              index: index,
+              placeHolder: Container(
+                height: 54.w,
               ),
+              child: Builder(builder: (context) {
+                return Listener(
+                  onPointerDown: (PointerDownEvent event) {
+                    if (event.kind == PointerDeviceKind.mouse &&
+                        event.buttons == kSecondaryMouseButton) {
+                      widget.onRightMouseClick?.call(entity, offset);
+                    }
+                  },
+                  child: GestureDetector(
+                    onPanDown: (details) {
+                      offset = details.globalPosition;
+                    },
+                    child: MouseRegion(
+                      onHover: (event) {
+                        offset = event.position;
+                      },
+                      child: FileItem(
+                        key: Key(entity.path),
+                        windowType: widget.windowType,
+                        controller: widget.controller,
+                        onTap: () {
+                          widget.itemOnTap?.call(entity);
+                        },
+                        onLongPress: () {
+                          widget.itemOnLongPress?.call(entity, offset);
+                        },
+                        fileEntity: entity,
+                      ),
+                    ),
+                  ),
+                );
+              }),
             );
-          });
-        },
+          },
+        ),
       ),
     );
   }
@@ -209,10 +217,11 @@ class _GridFileItemState extends State<GridFileItem> {
     FileEntity fileEntity = widget.entity;
     Widget icon;
     if (fileEntity.isDirectory) {
-      icon = Image.asset(
-        '${Config.flutterPackage}assets/icon/dir.png',
+      icon = SvgPicture.asset(
+        '${Config.flutterPackage}assets/icon/dir.svg',
         width: 32.w,
         height: 32.w,
+        color: Theme.of(context).primaryColor,
       );
     } else {
       icon = getIconByExt(fileEntity.path);
@@ -221,25 +230,34 @@ class _GridFileItemState extends State<GridFileItem> {
       onTap: () {
         widget.onTap?.call();
       },
-      child: SizedBox(
-        width: 72.w,
-        height: 72.w,
-        // color: Colors.red,
-        child: Column(
-          children: [
-            SizedBox(height: 12.w),
-            icon,
-            SizedBox(height: 4.w),
-            Text(
-              fileEntity.name,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 10.w,
+      child: LayoutBuilder(builder: (context, con) {
+        Log.i('con : $con');
+        return SizedBox(
+          width: con.maxWidth,
+          height: con.maxHeight,
+          // color: Colors.red,
+          child: Column(
+            children: [
+              SizedBox(height: 12.w),
+              SizedBox(
+                width: con.maxWidth - 20.w,
+                height: con.maxHeight - 40.w,
+                child: icon,
               ),
-            ),
-          ],
-        ),
-      ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: Text(
+                  fileEntity.name,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 12.w,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
@@ -256,6 +274,7 @@ class FileItem extends StatefulWidget {
     this.onLongPress,
     this.windowType = WindowType.defaultType,
   }) : super(key: key);
+
   final FileManagerController controller;
   final FileEntity fileEntity;
   final Function apkTool;
@@ -356,16 +375,17 @@ class _FileItemState extends State<FileItem>
 
     Widget icon;
     if (fileEntity.isDirectory) {
-      icon = Image.asset(
-        '${Config.flutterPackage}assets/icon/dir.png',
-        width: 20.0,
-        height: 20.0,
+      icon = SvgPicture.asset(
+        '${Config.flutterPackage}assets/icon/dir.svg',
+        width: 32.w,
+        height: 32.w,
+        color: Theme.of(context).primaryColor,
       );
     } else {
       icon = getIconByExt(fileEntity.path);
     }
     return SizedBox(
-      height: 54,
+      height: 54.w,
       child: Stack(
         children: <Widget>[
           if (clipboardController.checkNodes.contains(fileEntity))

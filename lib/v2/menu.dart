@@ -98,7 +98,7 @@ class _MenuState extends State<Menu> {
                         child: Align(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: Text(
+                            child: const Text(
                               '预览',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -130,7 +130,7 @@ class _MenuState extends State<Menu> {
                         child: Align(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: Text(
+                            child: const Text(
                               '重命名',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,

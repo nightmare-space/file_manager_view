@@ -1,16 +1,21 @@
+import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/extension/extension.dart';
+import 'package:file_manager_view/core/io/impl/directory_browser.dart';
 import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/file_manager_view.dart';
 import 'package:file_manager_view/v2/ext_util.dart';
+import 'package:file_manager_view/v2/file_util.dart';
 import 'package:file_manager_view/v2/menu.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
 import 'package:file_manager_view/widgets/file_manager_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
@@ -25,10 +30,15 @@ class HomePage extends StatefulWidget {
     this.drawer = true,
     this.path = '/sdcard',
     this.padding,
+    this.address,
+    this.usePackage = false,
   }) : super(key: key);
+
   final bool drawer;
   final String path;
   final EdgeInsetsGeometry padding;
+  final String address;
+  final bool usePackage;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -43,9 +53,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    if (widget.usePackage) {
+      Config.flutterPackage = 'packages/file_manager_view/';
+    }
     fileManagerController = Get.put(
       FileManagerController(widget.path),
     );
+    if (widget.address != null) {
+      fileManagerController.changeAddr(widget.address);
+    }
   }
 
   @override
@@ -57,6 +73,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor: const Color(0xfff3f4f9),
         body: SafeArea(
+          left: false,
           child: Padding(
             padding: widget.padding ?? EdgeInsets.all(8.w),
             child: Column(
@@ -79,7 +96,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               DrawerItem(
                                 title: '根目录',
-                                iconData: Icons.home,
+                                icon: Image.asset(
+                                  '${Config.flutterPackage}assets/icon/home_sel.png',
+                                  width: 20.w,
+                                ),
                                 groupValue: path,
                                 value: '/sdcard',
                                 onTap: (_) {
@@ -90,7 +110,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                               DrawerItem(
                                 title: '文档',
-                                iconData: Icons.home,
+                                icon: SvgPicture.asset(
+                                  '${Config.flutterPackage}assets/icon/document.svg',
+                                  width: 20.w,
+                                ),
                                 groupValue: path,
                                 value: '/sdcard/Documents',
                                 onTap: (_) {
@@ -101,7 +124,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                               DrawerItem(
                                 title: '下载',
-                                iconData: Icons.home,
+                                icon: SvgPicture.asset(
+                                  '${Config.flutterPackage}assets/icon/download.svg',
+                                  width: 20.w,
+                                ),
                                 groupValue: path,
                                 value: '/sdcard/Download',
                                 onTap: (_) {
@@ -112,7 +138,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                               DrawerItem(
                                 title: '回收站',
-                                iconData: Icons.ac_unit_rounded,
+                                icon: SvgPicture.asset(
+                                  '${Config.flutterPackage}assets/icon/recycle.svg',
+                                  width: 20.w,
+                                ),
                                 groupValue: path,
                                 value: '2',
                                 onTap: (_) {},
@@ -131,14 +160,19 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(height: 12.w),
                               DrawerItem(
                                 title: '外置储存',
-                                iconData: Icons.home,
+                                icon: SvgPicture.asset(
+                                  'assets/icon/document.svg',
+                                  width: 20.w,
+                                ),
                                 value: '2',
                                 onTap: (_) {},
                               ),
                               DrawerItem(
                                 title: '系统',
-                                iconData:
-                                    Icons.sentiment_very_dissatisfied_outlined,
+                                icon: SvgPicture.asset(
+                                  'assets/icon/document.svg',
+                                  width: 20.w,
+                                ),
                                 value: '2',
                                 onTap: (_) {},
                               ),
@@ -152,6 +186,9 @@ class _HomePageState extends State<HomePage> {
                           clipBehavior: Clip.hardEdge,
                           child: WillPopScope(
                             onWillPop: () async {
+                              if (fileManagerController.dirPath == '/') {
+                                Get.back();
+                              }
                               fileManagerController.updateFileNodes(
                                 p.dirname(fileManagerController.dirPath),
                               );
@@ -164,34 +201,15 @@ class _HomePageState extends State<HomePage> {
                                   : WindowDisplayType.list,
                               itemOnTap: (entity) async {
                                 if (entity is File) {
-                                  if (entity.path.isImg) {
-                                    Get.to(PreviewImage(
-                                      path: entity.path,
-                                      tag: entity.path,
-                                    ));
-                                  } else if (entity.path.isVideo) {
-                                    if (GetPlatform.isWeb) {
-                                      String path = getRemotePath(entity.path);
-                                      await canLaunch(Uri.encodeFull(path))
-                                          ? await launch(Uri.encodeFull(path))
-                                          : throw 'Could not launch $url';
-                                      return;
-                                    }
-                                    Get.to(
-                                      SerieExample(
-                                        url: entity.path,
-                                      ),
-                                    );
-                                  } else if (entity.path.isZip) {
-                                    if (GetPlatform.isWeb) {
-                                      String path = getRemotePath(entity.path);
-                                      await canLaunch(Uri.encodeFull(path))
-                                          ? await launch(Uri.encodeFull(path))
-                                          : throw 'Could not launch $url';
-                                      return;
-                                    }
+                                  String path = entity.path;
+                                  Directory dir = fileManagerController.dir;
+                                  if (dir is DirectoryBrowser &&
+                                      dir.addr != null) {
+                                    Uri uri = Uri.tryParse(dir.addr);
+                                    path = 'http://${uri.host}:${uri.port}$path'
+                                        .replaceAll('/sdcard', '');
                                   }
-
+                                  FileUtil.openFile(path);
                                   return;
                                 }
                                 if (entity.name == '..') {
@@ -289,7 +307,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 width: 40.w,
                 height: 40.w,
-                decoration: BoxDecoration(),
+                decoration: const BoxDecoration(),
                 child: InkWell(
                   onTap: () {
                     isGrid = !isGrid;
@@ -314,13 +332,13 @@ class DrawerItem extends StatelessWidget {
     this.onTap,
     this.value,
     this.groupValue,
-    this.iconData,
+    this.icon,
   }) : super(key: key);
   final String title;
   final void Function(String value) onTap;
   final String value;
   final String groupValue;
-  final IconData iconData;
+  final Widget icon;
   @override
   Widget build(BuildContext context) {
     final bool isChecked = value == groupValue;
@@ -355,13 +373,7 @@ class DrawerItem extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        iconData ?? Icons.open_in_new,
-                        size: 18.w,
-                        color: isChecked
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.onBackground,
-                      ),
+                      icon,
                       SizedBox(
                         width: Dimens.gap_dp8,
                       ),

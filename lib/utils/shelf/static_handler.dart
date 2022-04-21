@@ -154,7 +154,7 @@ File _tryDefaultFile(String dirPath, String defaultFile) {
 /// Creates a shelf [Handler] that serves the file at [path].
 ///
 /// This returns a 404 response for any requests whose [Request.url] doesn't
-/// match [url]. The [url] defaults to the basename of [path].
+/// match [path]. The [path] defaults to the basename of [path].
 ///
 /// This uses the given [contentType] for the Content-Type header. It defaults
 /// to looking up a content type based on [path]'s file extension, and failing

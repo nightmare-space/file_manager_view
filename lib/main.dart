@@ -13,15 +13,6 @@ import 'utils/shelf_static.dart';
 import 'v2/home_page.dart';
 import 'page/file_select_page.dart';
 
-String get urlPrefix {
-  Uri uri = Uri.tryParse(url);
-  String perfix = 'http://${uri.host}:20000';
-  if (kIsWeb && kDebugMode) {
-    perfix = 'http://192.168.184.102:20000';
-  }
-  return perfix;
-}
-
 Future<void> main() async {
   // debugPaintLayerBordersEnabled = true; // 显示层级边界÷
   if (!GetPlatform.isWeb) {
@@ -30,13 +21,20 @@ Future<void> main() async {
   runApp(const MyApp());
   StatusBarUtil.transparent();
   if (!GetPlatform.isWeb) {
-    ShelfStatic.start();
     await Server.start();
   }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
+  String get urlPrefix {
+    Uri uri = Uri.tryParse(url);
+    String perfix = 'http://${uri.host}:20000';
+    if (kIsWeb && kDebugMode) {
+      perfix = 'http://192.168.140.102:20000';
+    }
+    return perfix;
+  }
 
   // This widget is the root of your application.
   @override
@@ -50,38 +48,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       defaultTransition: Transition.fadeIn,
-      home: const HomePage(),
+      home:  HomePage(
+        address: urlPrefix,
+      ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, @required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    PermissionUtil.requestStorage();
-    init();
-  }
-
-  Future<void> init() async {
-    Directory dir = DirectoryFactory.getPlatformDirectory('/sdcard');
-    List<FileEntity> list = await dir.list();
-    list.forEach((element) {
-      Log.d(element);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FileSelectPage();
   }
 }

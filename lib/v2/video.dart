@@ -1,10 +1,12 @@
 // import 'package:better_player/better_player.dart';
 import 'package:better_player/better_player.dart';
+import 'package:file_manager_view/file_manager_view.dart';
 import 'package:flutter/material.dart';
+import 'package:signale/signale.dart';
 
 class SerieExample extends StatefulWidget {
-  const SerieExample({Key key, this.url}) : super(key: key);
-  final String url;
+  const SerieExample({Key key, this.path}) : super(key: key);
+  final String path;
 
   @override
   _SerieExampleState createState() => _SerieExampleState();
@@ -22,9 +24,9 @@ class _SerieExampleState extends State<SerieExample> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(4.0),
-          child: widget.url.startsWith('http')
+          child: widget.path.startsWith('http')
               ? BetterPlayer.network(
-                  widget.url,
+                  Uri.encodeFull(widget.path),
                   betterPlayerConfiguration: BetterPlayerConfiguration(
                     // aspectRatio: 9 / 16,
                     fullScreenByDefault: false,
@@ -33,7 +35,7 @@ class _SerieExampleState extends State<SerieExample> {
                   ),
                 )
               : BetterPlayer.file(
-                  widget.url,
+                  widget.path,
                   betterPlayerConfiguration: BetterPlayerConfiguration(
                     // aspectRatio: 9 / 16,
                     fullScreenByDefault: false,

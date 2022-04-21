@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/impl/directory_browser.dart';
+import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/main.dart';
 import 'package:file_manager_view/v2/ext_util.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'dart:io' as io;
 
 Widget getIconByExt(String path) {
   FileManagerController fileManagerController = Get.find();
@@ -43,9 +43,12 @@ Widget getIconByExt(String path) {
       height: 36.w,
     );
   } else if (path.isImg) {
-    if (fileManagerController.dir is DirectoryBrowser && GetPlatform.isWeb) {
-      Uri uri = Uri.tryParse(urlPrefix);
-      String perfix = 'http://${uri.host}:8000';
+    Directory dir = fileManagerController.dir;
+    if (dir is DirectoryBrowser && dir.addr != null) {
+      Uri uri = Uri.tryParse(
+        (fileManagerController.dir as DirectoryBrowser).addr,
+      );
+      String perfix = 'http://${uri.host}:20000';
       path = (perfix + path).replaceAll('/sdcard', '');
     }
     return Hero(
@@ -66,7 +69,7 @@ Widget getIconByExt(String path) {
               )
             : Image(
                 image: ResizeImage(
-                  FileImage(File(path)),
+                  FileImage(io.File(path)),
                   width: 36,
                 ),
                 width: 36.w,
