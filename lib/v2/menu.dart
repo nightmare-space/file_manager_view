@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
+import 'package:file_manager_view/v2/dialog/rename.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,12 +28,12 @@ class _MenuState extends State<Menu> {
       children: [
         Positioned.fill(
           top: min(
-            widget.offset.dy - 48.w,
-            MediaQuery.of(context).size.height,
+            widget.offset.dy,
+            MediaQuery.of(context).size.height - 260.w,
           ),
           left: min(
-            widget.offset.dx - 100.w,
-            MediaQuery.of(context).size.width,
+            widget.offset.dx,
+            MediaQuery.of(context).size.width - 200.w,
           ),
           child: Align(
             alignment: Alignment.topLeft,
@@ -40,6 +42,8 @@ class _MenuState extends State<Menu> {
               child: Material(
                 borderRadius: BorderRadius.circular(12.w),
                 clipBehavior: Clip.antiAlias,
+                color: Colors.white,
+                elevation: 2,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -66,7 +70,7 @@ class _MenuState extends State<Menu> {
                         child: Align(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: Text(
+                            child: const Text(
                               '下载',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -110,20 +114,10 @@ class _MenuState extends State<Menu> {
                     ),
                     InkWell(
                       onTap: () async {
-                        Uri uri = Uri.tryParse(url);
-                        String perfix = 'http://${uri.host}:8000';
-                        String path =
-                            widget.entity.path.replaceAll('/sdcard', '');
-                        await canLaunch(
-                          Uri.encodeFull(
-                            '$perfix$path',
-                          ),
-                        )
-                            ? await launch(
-                                Uri.encodeFull('$perfix$path'),
-                              )
-                            : throw 'Could not launch $url';
                         Navigator.of(context).pop();
+                        Get.dialog(RenameFile(
+                          entity: widget.entity,
+                        ));
                       },
                       child: SizedBox(
                         height: 48.w,
@@ -132,6 +126,28 @@ class _MenuState extends State<Menu> {
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
                             child: const Text(
                               '重命名',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        // Navigator.of(context).pop();
+                        // Get.dialog(RenameFile(
+                        //   entity: widget.entity,
+                        // ));
+                      },
+                      child: SizedBox(
+                        height: 48.w,
+                        child: Align(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: const Text(
+                              '删除',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                               ),

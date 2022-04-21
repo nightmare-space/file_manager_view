@@ -241,7 +241,7 @@ class _GridFileItemState extends State<GridFileItem> {
               SizedBox(height: 12.w),
               SizedBox(
                 width: con.maxWidth - 20.w,
-                height: con.maxHeight - 40.w,
+                height: con.maxHeight - 60.w,
                 child: icon,
               ),
               Padding(

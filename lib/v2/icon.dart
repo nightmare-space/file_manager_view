@@ -53,30 +53,25 @@ Widget getIconByExt(String path) {
     }
     return Hero(
       tag: path,
-      child: GestureDetector(
-        onTap: () {
-          // Get.to(PreviewImage(path: path));
-        },
-        child: path.startsWith('http')
-            ? Image(
-                width: 36.w,
-                height: 36.w,
-                fit: BoxFit.cover,
-                image: ResizeImage(
-                  NetworkImage(path),
-                  width: 36,
-                ),
-              )
-            : Image(
-                image: ResizeImage(
-                  FileImage(io.File(path)),
-                  width: 36,
-                ),
-                width: 36.w,
-                height: 36.w,
-                fit: BoxFit.cover,
+      child: path.startsWith('http')
+          ? Image(
+              width: 36.w,
+              height: 36.w,
+              fit: BoxFit.cover,
+              image: ResizeImage(
+                NetworkImage(path),
+                width: 36,
               ),
-      ),
+            )
+          : Image(
+              image: ResizeImage(
+                FileImage(io.File(path)),
+                width: 36,
+              ),
+              width: 36.w,
+              height: 36.w,
+              fit: BoxFit.cover,
+            ),
     );
   }
 
@@ -85,10 +80,5 @@ Widget getIconByExt(String path) {
     width: 36.w,
     height: 36.w,
   );
-  return GestureDetector(
-    onTap: () {
-      // OpenFile.open(path);
-    },
-    child: child,
-  );
+  return child;
 }

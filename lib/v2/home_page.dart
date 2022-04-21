@@ -47,7 +47,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FileSelectController fileSelectController = Get.put(FileSelectController());
   FileManagerController fileManagerController;
-  String path = '/sdcard';
   bool isGrid = false;
 
   @override
@@ -100,11 +99,10 @@ class _HomePageState extends State<HomePage> {
                                   '${Config.flutterPackage}assets/icon/home_sel.png',
                                   width: 20.w,
                                 ),
-                                groupValue: path,
+                                groupValue: fileManagerController.dirPath,
                                 value: '/sdcard',
                                 onTap: (_) {
-                                  path = _;
-                                  fileManagerController.updateFileNodes(path);
+                                  fileManagerController.updateFileNodes(_);
                                   setState(() {});
                                 },
                               ),
@@ -114,11 +112,10 @@ class _HomePageState extends State<HomePage> {
                                   '${Config.flutterPackage}assets/icon/document.svg',
                                   width: 20.w,
                                 ),
-                                groupValue: path,
+                                groupValue: fileManagerController.dirPath,
                                 value: '/sdcard/Documents',
                                 onTap: (_) {
-                                  path = _;
-                                  fileManagerController.updateFileNodes(path);
+                                  fileManagerController.updateFileNodes(_);
                                   setState(() {});
                                 },
                               ),
@@ -128,11 +125,10 @@ class _HomePageState extends State<HomePage> {
                                   '${Config.flutterPackage}assets/icon/download.svg',
                                   width: 20.w,
                                 ),
-                                groupValue: path,
+                                groupValue: fileManagerController.dirPath,
                                 value: '/sdcard/Download',
                                 onTap: (_) {
-                                  path = _;
-                                  fileManagerController.updateFileNodes(path);
+                                  fileManagerController.updateFileNodes(_);
                                   setState(() {});
                                 },
                               ),
@@ -142,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                                   '${Config.flutterPackage}assets/icon/recycle.svg',
                                   width: 20.w,
                                 ),
-                                groupValue: path,
+                                groupValue: fileManagerController.dirPath,
                                 value: '2',
                                 onTap: (_) {},
                               ),
@@ -195,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                               return false;
                             },
                             child: FileManagerListView(
-                              key: Key(path),
+                              key: Key(fileManagerController.dirPath),
                               displayType: isGrid
                                   ? WindowDisplayType.grid
                                   : WindowDisplayType.list,
@@ -222,14 +218,22 @@ class _HomePageState extends State<HomePage> {
                                 }
                               },
                               itemOnLongPress: (entity, offset) {
-                                Get.dialog(Menu(
-                                  offset: offset,
-                                ));
+                                Get.dialog(
+                                  Menu(
+                                    offset: offset,
+                                    entity: entity,
+                                  ),
+                                  barrierColor: Colors.transparent,
+                                );
                               },
                               onRightMouseClick: (file, offset) {
-                                Get.dialog(Menu(
-                                  offset: offset,
-                                ));
+                                Get.dialog(
+                                  Menu(
+                                    offset: offset,
+                                    entity: file,
+                                  ),
+                                  barrierColor: Colors.transparent,
+                                );
                               },
                               controller: fileManagerController,
                               windowType: WindowType.defaultType,
@@ -249,6 +253,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   SizedBox header() {
+    ScrollController scrollController = ScrollController();
     return SizedBox(
       height: 48.w,
       child: Padding(
@@ -287,12 +292,76 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: GetBuilder<FileManagerController>(
-                      builder: (context) {
-                        return Text(
-                          context.dirPath,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                      builder: (controller) {
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          scrollController.jumpTo(
+                            scrollController.position.maxScrollExtent,
+                          );
+                        });
+                        if (controller.dirPath == '/') {
+                          return Text(
+                            '/',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        }
+                        List<String> dir = controller.dirPath.split('/');
+                        Log.w(dir);
+                        dir[0] = '/';
+                        List<Widget> children = [];
+                        for (int i = 0; i < dir.length; i++) {
+                          Log.i(i.toString() + dir.take(i + 1).join('/'));
+                          if (i == dir.length - 1) {
+                            children.add(
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(8.w),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2.w,
+                                  horizontal: 6.w,
+                                ),
+                                child: Text(
+                                  dir[i],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                            break;
+                          }
+                          children.add(
+                            GestureDetector(
+                              onTap: () {
+                                FileManagerController controller = Get.find();
+                                controller.updateFileNodes(dir
+                                    .take(i + 1)
+                                    .join('/')
+                                    .replaceAll('//', '/'));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2.w,
+                                  horizontal: 6.w,
+                                ),
+                                child: Text(
+                                  dir[i],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return SingleChildScrollView(
+                          controller: scrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: Row(children: children),
                         );
                       },
                     ),

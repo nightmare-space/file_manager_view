@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_manager_view/core/io/impl/directory_unix.dart';
 import 'package:file_manager_view/utils/shelf/static_handler.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:path/path.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf/shelf.dart';
@@ -16,8 +17,40 @@ class Server {
       '/sdcard',
       listDirectories: true,
     );
-    app.get('/getdir', (Request request) async {
+    app.get('/rename', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
+      String path = request.requestedUri.queryParameters['path'];
+      String name = request.requestedUri.queryParameters['name'];
+      final headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Credentials': 'true',
+      };
+      File(path).rename(dirname(path) + '/' + name);
+      headers[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      return Response.ok(
+        "success",
+        headers: headers,
+      );
+    });
+    app.get('/delete', (Request request) async {
+      Log.i(request.requestedUri.queryParameters);
+      String path = request.requestedUri.queryParameters['path'];
+      final headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Credentials': 'true',
+      };
+      File(path).delete();
+      headers[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      return Response.ok(
+        "success",
+        headers: headers,
+      );
+    });
+    app.get('/getdir', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
       final headers = {
