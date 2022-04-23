@@ -203,7 +203,7 @@ class _FileManagerState extends State<FileManager> {
                                       dir.addr != null) {
                                     Uri uri = Uri.tryParse(dir.addr);
                                     path = 'http://${uri.host}:${uri.port}$path'
-                                        .replaceAll('/sdcard', '');
+                                        .replaceAll(RegExp('/sdcard|/Users'), '');
                                   }
                                   FileUtil.openFile(path);
                                   return;

@@ -1,5 +1,6 @@
 import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
+import 'package:file_manager_view/file_manager_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -55,9 +56,9 @@ class _FileSelectPageState extends State<FileSelectPage> {
       body: Column(
         children: [
           const Expanded(
-            child: FileManagerWindow(
-              windowType: WindowType.selectFile,
-              initPath: '/storage/emulated/0',
+            child: FileManager(
+              address: 'http://127.0.0.1:20000',
+              path: '/storage/emulated/0',
             ),
           ),
           SizedBox(

@@ -119,12 +119,18 @@ List<FileEntity> getFilesFrom(List<String> data, String path) {
   // ls 命令输出有空格上的对齐，不能用 list.split 然后以多个空格分开的方式来解析数据
   // 因为有的文件(夹)存在空格
   if (data.isNotEmpty) {
-    startIndex = data.first.indexOf(
-      RegExp(':[0-9][0-9] '),
-    ); //获取文件名开始的地址
-    startIndex += 4;
-    // Log.i('startIndex===>>>$startIndex');
-
+    if (currentIndex == -1) {
+      startIndex = data.first.indexOf(
+        RegExp(':[0-9][0-9] '),
+      ); //获取文件名开始的地址
+      startIndex += 4;
+    } else {
+      startIndex = data[currentIndex].indexOf(
+            ' ..',
+          ) +
+          1;
+    }
+    Log.i(startIndex);
     if (path == '/') {
       //如果当前路径已经是/就不需要再加一个/了
       for (int i = 0; i < data.length; i++) {

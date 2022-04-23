@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_manager_view/core/io/impl/directory_unix.dart';
 import 'package:file_manager_view/utils/shelf/static_handler.dart';
+import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -12,9 +13,10 @@ import 'package:shelf/shelf.dart';
 var app = Router();
 
 class Server {
+  // 启动文件管理器服务端
   static Future<void> start() async {
     var handler = createStaticHandler(
-      '/sdcard',
+      GetPlatform.isMacOS ? '/Users' : '/sdcard',
       listDirectories: true,
     );
     app.get('/rename', (Request request) async {
