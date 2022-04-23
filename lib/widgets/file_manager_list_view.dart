@@ -102,9 +102,9 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     super.dispose();
   }
 
-  int get count {
+  int getCount(double max) {
     Log.i((414.w - 20.w) / 84.w);
-    return (MediaQuery.of(context).size.width - 20.w) ~/ 78.w;
+    return (max - 20.w) ~/ 78.w;
   }
 
   Offset offset;
@@ -116,26 +116,36 @@ class _FileManagerListViewState extends State<FileManagerListView> {
       return const SizedBox();
     }
     if (widget.displayType == WindowDisplayType.grid) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: count,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-          childAspectRatio: 0.8,
-        ),
-        physics: const BouncingScrollPhysics(),
-        itemCount: widget.controller.fileNodes.length,
-        padding: EdgeInsets.only(top: 10.w),
-        itemBuilder: (BuildContext context, int index) {
-          final FileEntity entity = widget.controller.fileNodes[index];
-          return GridFileItem(
-            entity: entity,
-            onTap: () {
-              widget.itemOnTap?.call(entity);
+      return LayoutBuilder(builder: (context, con) {
+        return SizeCacheWidget(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: getCount(con.maxWidth),
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 0,
+              childAspectRatio: 0.8,
+            ),
+            physics: const BouncingScrollPhysics(),
+            itemCount: widget.controller.fileNodes.length,
+            padding: EdgeInsets.only(top: 10.w),
+            itemBuilder: (BuildContext context, int index) {
+              final FileEntity entity = widget.controller.fileNodes[index];
+              return FrameSeparateWidget(
+                index: index,
+                placeHolder: Container(
+                  height: 54.w,
+                ),
+                child: GridFileItem(
+                  entity: entity,
+                  onTap: () {
+                    widget.itemOnTap?.call(entity);
+                  },
+                ),
+              );
             },
-          );
-        },
-      );
+          ),
+        );
+      });
     }
     return RefreshIndicator(
       onRefresh: () async {

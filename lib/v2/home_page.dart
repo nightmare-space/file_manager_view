@@ -24,8 +24,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'preview_image.dart';
 import 'video.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({
+class FileManager extends StatefulWidget {
+  const FileManager({
     Key key,
     this.drawer = true,
     this.path = '/sdcard',
@@ -41,10 +41,10 @@ class HomePage extends StatefulWidget {
   final bool usePackage;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FileManager> createState() => _FileManagerState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _FileManagerState extends State<FileManager> {
   FileSelectController fileSelectController = Get.put(FileSelectController());
   FileManagerController fileManagerController;
   bool isGrid = false;
@@ -143,35 +143,35 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (_) {},
                               ),
                               SizedBox(height: 12.w),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                child: const Text(
-                                  '设备',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 12.w),
-                              DrawerItem(
-                                title: '外置储存',
-                                icon: SvgPicture.asset(
-                                  'assets/icon/document.svg',
-                                  width: 20.w,
-                                ),
-                                value: '2',
-                                onTap: (_) {},
-                              ),
-                              DrawerItem(
-                                title: '系统',
-                                icon: SvgPicture.asset(
-                                  'assets/icon/document.svg',
-                                  width: 20.w,
-                                ),
-                                value: '2',
-                                onTap: (_) {},
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              //   child: const Text(
+                              //     '设备',
+                              //     style: TextStyle(
+                              //       color: Colors.black,
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
+                              // SizedBox(height: 12.w),
+                              // DrawerItem(
+                              //   title: '外置储存',
+                              //   icon: SvgPicture.asset(
+                              //     'assets/icon/document.svg',
+                              //     width: 20.w,
+                              //   ),
+                              //   value: '2',
+                              //   onTap: (_) {},
+                              // ),
+                              // DrawerItem(
+                              //   title: '系统',
+                              //   icon: SvgPicture.asset(
+                              //     'assets/icon/document.svg',
+                              //     width: 20.w,
+                              //   ),
+                              //   value: '2',
+                              //   onTap: (_) {},
+                              // ),
                             ],
                           ),
                         ),
@@ -294,15 +294,23 @@ class _HomePageState extends State<HomePage> {
                     child: GetBuilder<FileManagerController>(
                       builder: (controller) {
                         Future.delayed(Duration(milliseconds: 100), () {
-                          scrollController.jumpTo(
-                            scrollController.position.maxScrollExtent,
-                          );
+                          if (scrollController.hasListeners) {
+                            scrollController.jumpTo(
+                              scrollController.position.maxScrollExtent,
+                            );
+                          }
                         });
                         if (controller.dirPath == '/') {
-                          return Text(
-                            '/',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 2.w,
+                              horizontal: 6.w,
+                            ),
+                            child: Text(
+                              '/',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           );
                         }

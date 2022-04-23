@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       defaultTransition: Transition.fadeIn,
-      home:  HomePage(
+      home:  FileManager(
         address: urlPrefix,
       ),
     );
