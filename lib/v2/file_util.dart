@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 
 import 'preview_image.dart';
+import 'preview_text.dart';
 import 'video.dart';
 
 class FileUtil {
@@ -15,6 +16,12 @@ class FileUtil {
     } else if (path.isVideo) {
       Get.to(
         SerieExample(
+          path: path,
+        ),
+      );
+    } else if (path.isText) {
+      Get.to(
+        PreviewText(
           path: path,
         ),
       );

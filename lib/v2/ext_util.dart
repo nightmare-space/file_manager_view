@@ -3,6 +3,13 @@ extension Ext on String {
     return endsWith('.mp3') || endsWith('.flac');
   }
 
+  bool get isText {
+    return endsWith('.txt') ||
+        endsWith('.html') ||
+        endsWith('.json') ||
+        endsWith(".js");
+  }
+
   bool get isVideo {
     return endsWith('.mp4') ||
         endsWith('.mkv') ||

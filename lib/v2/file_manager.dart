@@ -93,16 +93,20 @@ class _FileManagerState extends State<FileManager> {
                     children: [
                       if (widget.drawer && !GetPlatform.isAndroid)
                         SizedBox(
-                          width: 240.w,
+                          width: 200.w,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               DrawerItem(
                                 title: '根目录',
-                                icon: Image.asset(
-                                  '${Config.flutterPackage}assets/icon/home_sel.png',
-                                  width: 20.w,
-                                ),
+                                icon: (color) {
+                                  return Image.asset(
+                                    'assets/icon/home_sel.png',
+                                    width: 20.w,
+                                    color: color,
+                                    package: Config.package,
+                                  );
+                                },
                                 groupValue: fileManagerController.dirPath,
                                 value: '/sdcard',
                                 onTap: (_) {
@@ -112,10 +116,14 @@ class _FileManagerState extends State<FileManager> {
                               ),
                               DrawerItem(
                                 title: '文档',
-                                icon: SvgPicture.asset(
-                                  '${Config.flutterPackage}assets/icon/document.svg',
-                                  width: 20.w,
-                                ),
+                                icon: (color) {
+                                  return SvgPicture.asset(
+                                    'assets/icon/document.svg',
+                                    width: 20.w,
+                                    color: color,
+                                    package: Config.package,
+                                  );
+                                },
                                 groupValue: fileManagerController.dirPath,
                                 value: '/sdcard/Documents',
                                 onTap: (_) {
@@ -125,10 +133,14 @@ class _FileManagerState extends State<FileManager> {
                               ),
                               DrawerItem(
                                 title: '下载',
-                                icon: SvgPicture.asset(
-                                  '${Config.flutterPackage}assets/icon/download.svg',
-                                  width: 20.w,
-                                ),
+                                icon: (color) {
+                                  return SvgPicture.asset(
+                                    'assets/icon/download.svg',
+                                    width: 20.w,
+                                    color: color,
+                                    package: Config.package,
+                                  );
+                                },
                                 groupValue: fileManagerController.dirPath,
                                 value: '/sdcard/Download',
                                 onTap: (_) {
@@ -138,10 +150,14 @@ class _FileManagerState extends State<FileManager> {
                               ),
                               DrawerItem(
                                 title: '回收站',
-                                icon: SvgPicture.asset(
-                                  '${Config.flutterPackage}assets/icon/recycle.svg',
-                                  width: 20.w,
-                                ),
+                                icon: (color) {
+                                  return SvgPicture.asset(
+                                    'assets/icon/recycle.svg',
+                                    width: 20.w,
+                                    color: color,
+                                    package: Config.package,
+                                  );
+                                },
                                 groupValue: fileManagerController.dirPath,
                                 value: '2',
                                 onTap: (_) {},
@@ -212,9 +228,8 @@ class _FileManagerState extends State<FileManager> {
                                   if (dir is DirectoryBrowser &&
                                       dir.addr != null) {
                                     Uri uri = Uri.tryParse(dir.addr);
-                                    path = 'http://${uri.host}:${uri.port}$path'
-                                        .replaceAll(
-                                            RegExp('/sdcard|/Users'), '');
+                                    path =
+                                        'http://${uri.host}:${uri.port}$path';
                                   }
                                   FileUtil.openFile(path);
                                   return;
@@ -229,6 +244,9 @@ class _FileManagerState extends State<FileManager> {
                                 }
                               },
                               itemOnLongPress: (entity, offset) {
+                                if (GetPlatform.isDesktop) {
+                                  return;
+                                }
                                 Get.dialog(
                                   Menu(
                                     offset: offset,
@@ -425,10 +443,14 @@ class DrawerItem extends StatelessWidget {
   final void Function(String value) onTap;
   final String value;
   final String groupValue;
-  final Widget icon;
+  final Widget Function(Color color) icon;
   @override
   Widget build(BuildContext context) {
     final bool isChecked = value == groupValue;
+
+    Color color = isChecked
+        ? Theme.of(context).primaryColor
+        : Theme.of(context).colorScheme.onBackground;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       child: InkWell(
@@ -460,16 +482,14 @@ class DrawerItem extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      icon,
+                      icon(color),
                       SizedBox(
                         width: Dimens.gap_dp8,
                       ),
                       Text(
                         title,
                         style: TextStyle(
-                          color: isChecked
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).colorScheme.onBackground,
+                          color: color,
                           fontSize: 14.w,
                           fontWeight: FontWeight.bold,
                         ),

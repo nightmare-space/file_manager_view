@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:file_manager_view/core/io/document/document.dart';
+import 'package:file_manager_view/core/io/impl/directory_browser.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
+import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/v2/dialog/rename.dart';
+import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
@@ -13,9 +16,11 @@ class Menu extends StatefulWidget {
     Key key,
     this.entity,
     this.offset = const Offset(0, 0),
+    this.prefix,
   }) : super(key: key);
   final FileEntity entity;
   final Offset offset;
+  final String prefix;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -37,31 +42,41 @@ class _MenuState extends State<Menu> {
           ),
           child: Align(
             alignment: Alignment.topLeft,
-            child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 16.w,
+                    spreadRadius: 4.w,
+                  )
+                ],
+              ),
               width: 200.w,
               child: Material(
                 borderRadius: BorderRadius.circular(12.w),
                 clipBehavior: Clip.antiAlias,
                 color: Colors.white,
-                elevation: 2,
+                elevation: 0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(
                       onTap: () async {
                         // String url;
-                        Uri uri = Uri.tryParse(url);
-                        String perfix = 'http://${uri.host}:8000';
-                        String path =
-                            widget.entity.path.replaceAll('/sdcard', '');
-                        await canLaunch(
-                          Uri.encodeFull(
-                            '$perfix$path',
-                          ),
-                        )
+                        FileManagerController fileManagerController =
+                            Get.find();
+                        String path = widget.entity.path;
+                        Directory dir = fileManagerController.dir;
+                        Uri uri;
+                        if (dir is DirectoryBrowser && dir.addr != null) {
+                          uri = Uri.tryParse(dir.addr);
+                          path = 'http://${uri.host}:${uri.port}$path';
+                        }
+                        await canLaunch(Uri.encodeFull(path))
                             ? await launch(
-                                Uri.encodeFull('$perfix$path' '?download=true'),
-                              )
+                                Uri.encodeFull('$path' '?download=true'))
                             : throw 'Could not launch $url';
                         Navigator.of(context).pop();
                       },
@@ -82,18 +97,17 @@ class _MenuState extends State<Menu> {
                     ),
                     InkWell(
                       onTap: () async {
-                        Uri uri = Uri.tryParse(url);
-                        String perfix = 'http://${uri.host}:8000';
-                        String path =
-                            widget.entity.path.replaceAll('/sdcard', '');
-                        await canLaunch(
-                          Uri.encodeFull(
-                            '$perfix$path',
-                          ),
-                        )
-                            ? await launch(
-                                Uri.encodeFull('$perfix$path'),
-                              )
+                        FileManagerController fileManagerController =
+                            Get.find();
+                        String path = widget.entity.path;
+                        Directory dir = fileManagerController.dir;
+                        Uri uri;
+                        if (dir is DirectoryBrowser && dir.addr != null) {
+                          uri = Uri.tryParse(dir.addr);
+                          path = 'http://${uri.host}:${uri.port}$path';
+                        }
+                        await canLaunch(Uri.encodeFull(path))
+                            ? await launch(Uri.encodeFull(path))
                             : throw 'Could not launch $url';
                         Navigator.of(context).pop();
                       },
