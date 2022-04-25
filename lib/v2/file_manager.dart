@@ -32,13 +32,16 @@ class FileManager extends StatefulWidget {
     this.padding,
     this.address,
     this.usePackage = false,
+    this.windowType = WindowType.defaultType,
   }) : super(key: key);
 
   final bool drawer;
   final String path;
   final EdgeInsetsGeometry padding;
   final String address;
+  // 是否使用package前缀
   final bool usePackage;
+  final WindowType windowType;
 
   @override
   State<FileManager> createState() => _FileManagerState();
@@ -191,11 +194,17 @@ class _FileManagerState extends State<FileManager> {
                               return false;
                             },
                             child: FileManagerListView(
+                              windowType: widget.windowType,
                               key: Key(fileManagerController.dirPath),
                               displayType: isGrid
                                   ? WindowDisplayType.grid
                                   : WindowDisplayType.list,
                               itemOnTap: (entity) async {
+                                if (widget.windowType ==
+                                        WindowType.selectFile &&
+                                    entity.isFile) {
+                                  return;
+                                }
                                 if (entity is File) {
                                   String path = entity.path;
                                   Directory dir = fileManagerController.dir;
@@ -203,7 +212,8 @@ class _FileManagerState extends State<FileManager> {
                                       dir.addr != null) {
                                     Uri uri = Uri.tryParse(dir.addr);
                                     path = 'http://${uri.host}:${uri.port}$path'
-                                        .replaceAll(RegExp('/sdcard|/Users'), '');
+                                        .replaceAll(
+                                            RegExp('/sdcard|/Users'), '');
                                   }
                                   FileUtil.openFile(path);
                                   return;
@@ -236,7 +246,6 @@ class _FileManagerState extends State<FileManager> {
                                 );
                               },
                               controller: fileManagerController,
-                              windowType: WindowType.defaultType,
                             ),
                           ),
                         ),

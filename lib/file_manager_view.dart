@@ -1,5 +1,5 @@
 // export 'utils/file_manager.dart';
-export 'v2/home_page.dart';
+export 'v2/file_manager.dart';
 export 'core/server/file_server.dart';
 export 'config/config.dart';
 

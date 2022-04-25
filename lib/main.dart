@@ -10,7 +10,7 @@ import 'core/io/interface/file_entity.dart';
 import 'core/io/util/directory_factory.dart';
 import 'core/server/file_server.dart';
 import 'utils/shelf_static.dart';
-import 'v2/home_page.dart';
+import 'v2/file_manager.dart';
 import 'page/file_select_page.dart';
 
 Future<void> main() async {
