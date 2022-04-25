@@ -57,6 +57,7 @@ class _FileManagerState extends State<FileManager> {
     super.initState();
     if (widget.usePackage) {
       Config.flutterPackage = 'packages/file_manager_view/';
+      Config.package = 'file_manager_view';
     }
     fileManagerController = Get.put(
       FileManagerController(widget.path),

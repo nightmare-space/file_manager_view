@@ -1,3 +1,4 @@
+import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/impl/directory_browser.dart';
 import 'package:file_manager_view/core/io/interface/io.dart';
@@ -17,30 +18,35 @@ Widget getIconByExt(String path) {
       'assets/icon/video.png',
       width: 36.w,
       height: 36.w,
+      package: Config.package,
     );
   } else if (path.isPdf) {
     child = Image.asset(
       'assets/icon/pdf.png',
       width: 36.w,
       height: 36.w,
+      package: Config.package,
     );
   } else if (path.isDoc) {
     child = Image.asset(
       'assets/icon/doc.png',
       width: 36.w,
       height: 36.w,
+      package: Config.package,
     );
   } else if (path.isZip) {
     child = Image.asset(
       'assets/icon/zip.png',
       width: 36.w,
       height: 36.w,
+      package: Config.package,
     );
   } else if (path.isAudio) {
     child = Image.asset(
       'assets/icon/mp3.png',
       width: 36.w,
       height: 36.w,
+      package: Config.package,
     );
   } else if (path.isImg) {
     Directory dir = fileManagerController.dir;
@@ -79,6 +85,7 @@ Widget getIconByExt(String path) {
     'assets/icon/other.png',
     width: 36.w,
     height: 36.w,
+    package: Config.package,
   );
   return child;
 }
