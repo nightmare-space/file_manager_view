@@ -51,9 +51,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     //页面启动的时候的初始化
     widget.controller.addListener(controllerCallback);
     Log.d('初始化的路径 -> ${widget.controller.dirPath}');
-    if (widget.controller.fileNodes.isEmpty) {
-      widget.controller.updateFileNodes();
-    }
+    widget.controller.updateFileNodes();
   }
 
   void controllerCallback() {

@@ -64,6 +64,7 @@ class _FileManagerState extends State<FileManager> {
     );
     if (widget.address != null) {
       fileManagerController.changeAddr(widget.address);
+      fileManagerController.updatePath(widget.path);
     }
   }
 
