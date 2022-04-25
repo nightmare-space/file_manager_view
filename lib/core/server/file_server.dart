@@ -16,7 +16,7 @@ class Server {
   // 启动文件管理器服务端
   static Future<void> start() async {
     var handler = createStaticHandler(
-      GetPlatform.isMacOS ? '/Users' : '/sdcard',
+      GetPlatform.isMacOS ? '/Users' : '/',
       listDirectories: true,
     );
     app.get('/rename', (Request request) async {

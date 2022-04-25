@@ -55,7 +55,7 @@ Widget getIconByExt(String path) {
         (fileManagerController.dir as DirectoryBrowser).addr,
       );
       String perfix = 'http://${uri.host}:20000';
-      path = (perfix + path).replaceAll(RegExp('/sdcard|/Users'), '');
+      path = perfix + path;
     }
     return Hero(
       tag: path,
