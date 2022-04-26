@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xff57affc),
-        ),
+        // colorScheme: ColorScheme.fromSeed(
+        //   seedColor: const Color(0xff57affc),
+        // ),
       ),
       defaultTransition: Transition.fadeIn,
       home:  FileManager(

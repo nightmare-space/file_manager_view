@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:io';
 import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/core/io/interface/directory.dart';
 import 'package:file_manager_view/core/io/interface/file.dart';
@@ -167,4 +168,16 @@ List<FileEntity> getFilesFrom(List<String> data, String path) {
     }
   }
   return fileNodes;
+}
+
+Future<String> exec(String cmd) async {
+  String value = '';
+  final ProcessResult result = await Process.run(
+    'sh',
+    ['-c', cmd],
+    environment: io.Platform.environment,
+  );
+  value += result.stdout.toString();
+  value += result.stderr.toString();
+  return value.trim();
 }
