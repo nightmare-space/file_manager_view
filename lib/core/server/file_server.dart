@@ -11,6 +11,12 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf/shelf.dart';
 
 var app = Router();
+final corsHeader = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Methods': '*',
+  'Access-Control-Allow-Credentials': 'true',
+};
 
 class Server {
   // 启动文件管理器服务端
@@ -23,49 +29,31 @@ class Server {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
       String name = request.requestedUri.queryParameters['name'];
-      final headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Credentials': 'true',
-      };
       File(path).rename(dirname(path) + '/' + name);
-      headers[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
         "success",
-        headers: headers,
+        headers: corsHeader,
       );
     });
     app.get('/delete', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
-      final headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Credentials': 'true',
-      };
       File(path).delete();
-      headers[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
         "success",
-        headers: headers,
+        headers: corsHeader,
       );
     });
     app.get('/getdir', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
-      final headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Credentials': 'true',
-      };
-      headers[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
       List<String> full = await getFullMessage(path);
       return Response.ok(
         jsonEncode(full),
-        headers: headers,
+        headers: corsHeader,
       );
     });
     app.mount('/', (request) => handler(request));

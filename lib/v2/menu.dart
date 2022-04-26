@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'dialog/delete.dart';
+
 class Menu extends StatefulWidget {
   const Menu({
     Key key,
@@ -150,10 +152,10 @@ class _MenuState extends State<Menu> {
                     ),
                     InkWell(
                       onTap: () async {
-                        // Navigator.of(context).pop();
-                        // Get.dialog(RenameFile(
-                        //   entity: widget.entity,
-                        // ));
+                        Navigator.of(context).pop();
+                        Get.dialog(DeleteFile(
+                          entity: widget.entity,
+                        ));
                       },
                       child: SizedBox(
                         height: 48.w,

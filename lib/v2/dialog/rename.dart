@@ -130,32 +130,35 @@ class _RenameFileState extends State<RenameFile> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () async {
-                    Log.i('object');
-                    FileManagerController fileManagerController = Get.find();
-                    String path = widget.entity.path;
-                    Directory dir = fileManagerController.dir;
-                    Uri uri;
-                    if (dir is DirectoryBrowser && dir.addr != null) {
-                      uri = Uri.tryParse(dir.addr);
-                    }
-                    try {
-                      var response = await Dio().get<String>(
-                        '$uri/rename',
-                        queryParameters: {
-                          'path': path,
-                          'name': textEditingController.text,
-                        },
-                      );
-                    } catch (e) {
-                      Log.e('$this error ->$e');
-                    }
-                    focusNode.unfocus();
-                    fileManagerController.updateFileNodes();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('确定'),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      Log.i('object');
+                      FileManagerController fileManagerController = Get.find();
+                      String path = widget.entity.path;
+                      Directory dir = fileManagerController.dir;
+                      Uri uri;
+                      if (dir is DirectoryBrowser && dir.addr != null) {
+                        uri = Uri.tryParse(dir.addr);
+                      }
+                      try {
+                        var response = await Dio().get<String>(
+                          '$uri/rename',
+                          queryParameters: {
+                            'path': path,
+                            'name': textEditingController.text,
+                          },
+                        );
+                      } catch (e) {
+                        Log.e('$this error ->$e');
+                      }
+                      focusNode.unfocus();
+                      fileManagerController.updateFileNodes();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('确定'),
+                  ),
                 ),
               ),
             ],
