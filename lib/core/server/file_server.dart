@@ -29,7 +29,7 @@ class Server {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
       String name = request.requestedUri.queryParameters['name'];
-      File(path).rename(dirname(path) + '/' + name);
+      await File(path).rename(dirname(path) + '/' + name);
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
         "success",
@@ -39,7 +39,7 @@ class Server {
     app.get('/delete', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path'];
-      File(path).delete();
+      await File(path).delete();
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
         "success",
@@ -57,6 +57,7 @@ class Server {
       );
     });
     app.mount('/', (request) => handler(request));
+    // ignore: unused_local_variable
     HttpServer server = await io.serve(
       app,
       InternetAddress.anyIPv4,
