@@ -9,14 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:keframe/keframe.dart';
-
 import 'file_item_suffix.dart';
 import 'file_manager_window.dart';
 
 typedef FileOnTap = void Function(FileEntity fileEntity);
 typedef FileOnLongPress = void Function(FileEntity fileEntity, Offset offset);
 typedef OnRightMouseClick = void Function(FileEntity fileEntity, Offset offset);
+
 enum WindowDisplayType {
   list,
   grid,
@@ -114,33 +113,25 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     }
     if (widget.displayType == WindowDisplayType.grid) {
       return LayoutBuilder(builder: (context, con) {
-        return SizeCacheWidget(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: getCount(con.maxWidth),
-              crossAxisSpacing: 0,
-              mainAxisSpacing: 0,
-              childAspectRatio: 0.8,
-            ),
-            physics: const BouncingScrollPhysics(),
-            itemCount: widget.controller.fileNodes.length,
-            padding: EdgeInsets.only(top: 10.w),
-            itemBuilder: (BuildContext context, int index) {
-              final FileEntity entity = widget.controller.fileNodes[index];
-              return FrameSeparateWidget(
-                index: index,
-                placeHolder: Container(
-                  height: 54.w,
-                ),
-                child: GridFileItem(
-                  entity: entity,
-                  onTap: () {
-                    widget.itemOnTap?.call(entity);
-                  },
-                ),
-              );
-            },
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: getCount(con.maxWidth),
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+            childAspectRatio: 0.8,
           ),
+          physics: const BouncingScrollPhysics(),
+          itemCount: widget.controller.fileNodes.length,
+          padding: EdgeInsets.only(top: 10.w),
+          itemBuilder: (BuildContext context, int index) {
+            final FileEntity entity = widget.controller.fileNodes[index];
+            return GridFileItem(
+              entity: entity,
+              onTap: () {
+                widget.itemOnTap?.call(entity);
+              },
+            );
+          },
         );
       });
     }
@@ -149,57 +140,49 @@ class _FileManagerListViewState extends State<FileManagerListView> {
         widget.controller.updateFileNodes();
       },
       displacement: 1,
-      child: SizeCacheWidget(
-        child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          cacheExtent: 400,
-          controller:
-              ScrollController(initialScrollOffset: widget.initScrollOffset),
-          itemCount: widget.controller.fileNodes.length,
-          padding: EdgeInsets.only(bottom: 100.w),
-          //不然会有一个距离上面的边距
-          itemBuilder: (BuildContext context, int index) {
-            final FileEntity entity = widget.controller.fileNodes[index];
-            return FrameSeparateWidget(
-              index: index,
-              placeHolder: Container(
-                height: 54.w,
-              ),
-              child: Builder(builder: (context) {
-                return Listener(
-                  onPointerDown: (PointerDownEvent event) {
-                    if (event.kind == PointerDeviceKind.mouse &&
-                        event.buttons == kSecondaryMouseButton) {
-                      widget.onRightMouseClick?.call(entity, offset);
-                    }
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        cacheExtent: 400,
+        controller:
+            ScrollController(initialScrollOffset: widget.initScrollOffset),
+        itemCount: widget.controller.fileNodes.length,
+        padding: EdgeInsets.only(bottom: 100.w),
+        //不然会有一个距离上面的边距
+        itemBuilder: (BuildContext context, int index) {
+          final FileEntity entity = widget.controller.fileNodes[index];
+          return Builder(builder: (context) {
+            return Listener(
+              onPointerDown: (PointerDownEvent event) {
+                if (event.kind == PointerDeviceKind.mouse &&
+                    event.buttons == kSecondaryMouseButton) {
+                  widget.onRightMouseClick?.call(entity, offset);
+                }
+              },
+              child: GestureDetector(
+                onPanDown: (details) {
+                  offset = details.globalPosition;
+                },
+                child: MouseRegion(
+                  onHover: (event) {
+                    offset = event.position;
                   },
-                  child: GestureDetector(
-                    onPanDown: (details) {
-                      offset = details.globalPosition;
+                  child: FileItem(
+                    key: Key(entity.path),
+                    windowType: widget.windowType,
+                    controller: widget.controller,
+                    onTap: () {
+                      widget.itemOnTap?.call(entity);
                     },
-                    child: MouseRegion(
-                      onHover: (event) {
-                        offset = event.position;
-                      },
-                      child: FileItem(
-                        key: Key(entity.path),
-                        windowType: widget.windowType,
-                        controller: widget.controller,
-                        onTap: () {
-                          widget.itemOnTap?.call(entity);
-                        },
-                        onLongPress: () {
-                          widget.itemOnLongPress?.call(entity, offset);
-                        },
-                        fileEntity: entity,
-                      ),
-                    ),
+                    onLongPress: () {
+                      widget.itemOnLongPress?.call(entity, offset);
+                    },
+                    fileEntity: entity,
                   ),
-                );
-              }),
+                ),
+              ),
             );
-          },
-        ),
+          });
+        },
       ),
     );
   }

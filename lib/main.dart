@@ -27,6 +27,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
+
   String get urlPrefix {
     Uri uri = Uri.tryParse(url);
     String perfix = 'http://${uri.host}:20000';
@@ -36,21 +37,57 @@ class MyApp extends StatelessWidget {
     return perfix;
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        // colorScheme: ColorScheme.fromSeed(
-        //   seedColor: const Color(0xff57affc),
-        // ),
-      ),
+      theme: ThemeData.light().copyWith(),
       defaultTransition: Transition.fadeIn,
-      home:  FileManager(
+      home: FileManager(
         address: urlPrefix,
       ),
+    );
+  }
+}
+
+class FutureWrapper extends StatefulWidget {
+  const FutureWrapper({
+    Key key,
+    this.child,
+  }) : super(key: key);
+  final Widget child;
+
+  @override
+  State<FutureWrapper> createState() => _FutureWrapperState();
+}
+
+class _FutureWrapperState extends State<FutureWrapper> {
+  bool isInit = false;
+  Future<void> init() async {
+    if (isInit) {
+      return;
+    }
+    await Server.start();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: init(),
+      builder: (_, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Text('Input a URL to start');
+          case ConnectionState.waiting:
+            return const Center(child: CircularProgressIndicator());
+          case ConnectionState.active:
+            return const Text('');
+          case ConnectionState.done:
+            return widget.child;
+        }
+        return const SizedBox();
+      },
     );
   }
 }
