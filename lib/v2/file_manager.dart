@@ -1,28 +1,22 @@
 import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
-import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/extension/extension.dart';
 import 'package:file_manager_view/core/io/impl/directory_browser.dart';
 import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/file_manager_view.dart';
-import 'package:file_manager_view/v2/ext_util.dart';
 import 'package:file_manager_view/v2/file_util.dart';
 import 'package:file_manager_view/v2/menu.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
 import 'package:file_manager_view/widgets/file_manager_window.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
-import 'package:url_launcher/url_launcher.dart';
 
-import 'preview_image.dart';
-import 'video.dart';
 
 class FileManager extends StatefulWidget {
   const FileManager({
@@ -322,7 +316,7 @@ class _FileManagerState extends State<FileManager> {
                     padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: GetBuilder<FileManagerController>(
                       builder: (controller) {
-                        Future.delayed(Duration(milliseconds: 100), () {
+                        Future.delayed(const Duration(milliseconds: 100), () {
                           if (scrollController.hasListeners) {
                             scrollController.jumpTo(
                               scrollController.position.maxScrollExtent,
@@ -335,9 +329,9 @@ class _FileManagerState extends State<FileManager> {
                               vertical: 2.w,
                               horizontal: 6.w,
                             ),
-                            child: Text(
+                            child: const Text(
                               '/',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

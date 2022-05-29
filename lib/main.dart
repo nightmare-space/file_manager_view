@@ -5,14 +5,8 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'config/config.dart';
-import 'core/io/interface/directory.dart';
-import 'core/io/interface/file_entity.dart';
-import 'core/io/util/directory_factory.dart';
 import 'core/server/file_server.dart';
-import 'utils/shelf_static.dart';
 import 'v2/file_manager.dart';
-import 'page/file_select_page.dart';
-
 Future<void> main() async {
   // debugPaintLayerBordersEnabled = true; // 显示层级边界÷
   if (!GetPlatform.isWeb) {

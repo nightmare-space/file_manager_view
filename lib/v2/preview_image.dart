@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_manager_view/file_manager_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signale/signale.dart';

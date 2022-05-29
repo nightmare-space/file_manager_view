@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_manager_view/core/io/impl/directory_unix.dart';
-import 'package:file_manager_view/utils/shelf/static_handler.dart';
 import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf/shelf.dart';
+import 'package:shelf_static/shelf_static.dart';
 
 var app = Router();
 final corsHeader = {

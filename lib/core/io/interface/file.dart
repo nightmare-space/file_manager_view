@@ -11,6 +11,4 @@ abstract class File extends FileEntity {
   final String _path;
   @override
   String get path => _path;
-
-  String info;
 }

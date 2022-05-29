@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/impl/directory_browser.dart';
-import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:file_manager_view/core/io/interface/io.dart';
 import 'package:file_manager_view/v2/dialog/rename.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
@@ -48,7 +47,7 @@ class _MenuState extends State<Menu> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, 0),
+                    offset: const Offset(0, 0),
                     color: Colors.black.withOpacity(0.06),
                     blurRadius: 16.w,
                     spreadRadius: 4.w,

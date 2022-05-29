@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:shelf/shelf_io.dart' as io;
-
-import 'shelf/static_handler.dart';
+import 'package:shelf_static/shelf_static.dart';
 
 bool _started = false;
 

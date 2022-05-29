@@ -1,4 +1,3 @@
-import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:file_manager_view/file_manager_view.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
-import '../widgets/file_manager_window.dart';
 
 /// Created By Nightmare on 2021/7/20
 /// 文件选择组件

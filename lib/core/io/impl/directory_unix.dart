@@ -1,6 +1,5 @@
 import 'dart:io' as io;
 import 'dart:io';
-import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/core/io/interface/directory.dart';
 import 'package:file_manager_view/core/io/interface/file.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
@@ -37,7 +36,7 @@ Future<List<String>> getFullMessage(String path) async {
     '$lsPath -aog "$path"\n',
   );
   lsOut.split('\n').forEach((element) {
-    Log.d(element);
+    // Log.d(element);
   });
   // 删除第一行 -> total xxx
   fullmessage = lsOut.split('\n')..removeAt(0);

@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/interface/directory.dart';
 import 'package:file_manager_view/core/io/interface/file_entity.dart';
-import 'package:file_manager_view/main.dart';
-import 'package:flutter/foundation.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'directory_unix.dart';

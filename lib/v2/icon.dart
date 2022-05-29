@@ -1,8 +1,6 @@
 import 'package:file_manager_view/config/config.dart';
-import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:file_manager_view/core/io/impl/directory_browser.dart';
 import 'package:file_manager_view/core/io/interface/io.dart';
-import 'package:file_manager_view/main.dart';
 import 'package:file_manager_view/v2/ext_util.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:flutter/material.dart';
