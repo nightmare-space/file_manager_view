@@ -36,5 +36,5 @@ flutter:
     - assets/icon/
     
 dependency_overrides:
-  global_repository:
-    path: /Users/nightmare/Desktop/nightmare-space/global_repository
+  # global_repository:
+  #   path: /Users/nightmare/Desktop/nightmare-space/global_repository

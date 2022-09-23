@@ -65,6 +65,48 @@ class Server {
       shared: true,
     );
   }
+
+  // 启动文件管理器服务端
+  static Router getFileServerHandler() {
+    var handler = createStaticHandler(
+      GetPlatform.isMacOS ? '/Users' : '/',
+      listDirectories: true,
+    );
+    app.get('/rename', (Request request) async {
+      Log.i(request.requestedUri.queryParameters);
+      String path = request.requestedUri.queryParameters['path'];
+      String name = request.requestedUri.queryParameters['name'];
+      await File(path).rename(dirname(path) + '/' + name);
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      return Response.ok(
+        "success",
+        headers: corsHeader,
+      );
+    });
+    app.get('/delete', (Request request) async {
+      Log.i(request.requestedUri.queryParameters);
+      String path = request.requestedUri.queryParameters['path'];
+      await File(path).delete();
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+      return Response.ok(
+        "success",
+        headers: corsHeader,
+      );
+    });
+    app.get('/getdir', (Request request) async {
+      Log.i(request.requestedUri.queryParameters);
+      String path = request.requestedUri.queryParameters['path'];
+      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
+      List<String> full = await getFullMessage(path);
+      return Response.ok(
+        jsonEncode(full),
+        headers: corsHeader,
+      );
+    });
+    app.mount('/', (request) => handler(request));
+    // ignore: unused_local_variable
+    return app;
+  }
 }
 
 Future<String> execCmd(
