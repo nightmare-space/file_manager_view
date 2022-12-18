@@ -9,10 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   better_player: ^0.0.81
-  shelf_static:
-    git:
-      url: https://github.com/nightmare-space/shelf
-      path: pkgs/shelf_static
+  shelf_static: ^1.1.1
   shelf_router: ^1.0.0
   url_launcher: ^6.0.4
   get: ^4.1.4

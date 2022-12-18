@@ -364,12 +364,10 @@ packages:
   shelf_static:
     dependency: "direct main"
     description:
-      path: "pkgs/shelf_static"
-      ref: HEAD
-      resolved-ref: a1596aa06b7cb111ce8fecd584b57c75e0240773
-      url: "https://github.com/nightmare-space/shelf"
-    source: git
-    version: "1.1.1-dev"
+      name: shelf_static
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.1"
   signale:
     dependency: "direct main"
     description:
