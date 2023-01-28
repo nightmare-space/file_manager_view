@@ -8,7 +8,7 @@ abstract class File extends FileEntity {
     return FileUnix(path, info: info);
   }
 
-  final String _path;
+  late String _path;
   @override
   String get path => _path;
 }

@@ -5,11 +5,11 @@ import 'file.dart';
 import 'package:path/path.dart' as p;
 
 abstract class FileEntity {
-  Executable shell;
+  Executable? shell;
   //这个名字可能带有->/x/x的字符
-  String path;
+  late String path;
   //完整信息
-  String info;
+  String? info;
   //文件创建日期
 
   String accessed = '';

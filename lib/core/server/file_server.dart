@@ -27,8 +27,8 @@ class Server {
     );
     app.get('/rename', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
-      String name = request.requestedUri.queryParameters['name'];
+      String path = request.requestedUri.queryParameters['path']!;
+      String name = request.requestedUri.queryParameters['name']!;
       await File(path).rename(dirname(path) + '/' + name);
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
@@ -38,7 +38,7 @@ class Server {
     });
     app.get('/delete', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
+      String path = request.requestedUri.queryParameters['path']!;
       await File(path).delete();
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
@@ -48,7 +48,7 @@ class Server {
     });
     app.get('/getdir', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
+      String path = request.requestedUri.queryParameters['path']!;
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
       List<String> full = await getFullMessage(path);
       return Response.ok(
@@ -74,8 +74,8 @@ class Server {
     );
     app.get('/rename', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
-      String name = request.requestedUri.queryParameters['name'];
+      String path = request.requestedUri.queryParameters['path']!;
+      String name = request.requestedUri.queryParameters['name']!;
       await File(path).rename(dirname(path) + '/' + name);
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
@@ -85,7 +85,7 @@ class Server {
     });
     app.get('/delete', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
+      String path = request.requestedUri.queryParameters['path']!;
       await File(path).delete();
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
       return Response.ok(
@@ -95,7 +95,7 @@ class Server {
     });
     app.get('/getdir', (Request request) async {
       Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path'];
+      String path = request.requestedUri.queryParameters['path']!;
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
       List<String> full = await getFullMessage(path);
       return Response.ok(
@@ -117,7 +117,7 @@ Future<String> execCmd(
   ProcessResult execResult;
   if (Platform.isWindows) {
     execResult = await Process.run(
-      RuntimeEnvir.binPath + Platform.pathSeparator + args[0],
+      RuntimeEnvir.binPath !+ Platform.pathSeparator + args[0],
       args.sublist(1),
       environment: RuntimeEnvir.envir(),
       includeParentEnvironment: true,

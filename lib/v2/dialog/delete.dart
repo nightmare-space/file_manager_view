@@ -9,7 +9,7 @@ import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 
 class DeleteFile extends StatefulWidget {
-  const DeleteFile({Key key, this.entity}) : super(key: key);
+  const DeleteFile({Key ?key,required this.entity}) : super(key: key);
   final FileEntity entity;
 
   @override
@@ -17,7 +17,7 @@ class DeleteFile extends StatefulWidget {
 }
 
 class _DeleteFileState extends State<DeleteFile> {
-  TextEditingController textEditingController;
+  late TextEditingController textEditingController;
   FocusNode focusNode = FocusNode();
   @override
   void initState() {
@@ -79,9 +79,9 @@ class _DeleteFileState extends State<DeleteFile> {
                               Get.find();
                           String path = widget.entity.path;
                           Directory dir = fileManagerController.dir;
-                          Uri uri;
+                          late Uri uri;
                           if (dir is DirectoryBrowser && dir.addr != null) {
-                            uri = Uri.tryParse(dir.addr);
+                            uri = Uri.tryParse(dir.addr)!;
                           }
                           try {
                             var response = await Dio().get<String>(

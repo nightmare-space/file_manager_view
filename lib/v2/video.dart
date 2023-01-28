@@ -3,7 +3,7 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 
 class SerieExample extends StatefulWidget {
-  const SerieExample({Key key, this.path}) : super(key: key);
+  const SerieExample({Key? key,required this.path}) : super(key: key);
   final String path;
 
   @override

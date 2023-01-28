@@ -8,7 +8,7 @@ class DirectoryFactory {
   static Directory getPlatformDirectory(
     String path, {
     String info = '',
-    Executable shell,
+    Executable ?shell,
   }) {
     shell ??= YanProcess();
     if (GetPlatform.isWeb) {

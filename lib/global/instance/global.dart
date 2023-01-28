@@ -11,12 +11,12 @@ class Global {
   // 用户信息
   // 主题状态
   static Global get instance => _getInstance();
-  static Global _instance;
+  static Global? _instance;
 
-  String doucumentDir;
+  String ?doucumentDir;
   static Global _getInstance() {
     _instance ??= Global._internal();
-    return _instance;
+    return _instance!;
   }
 
   Clipboards clipboards = Clipboards();

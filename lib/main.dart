@@ -7,6 +7,7 @@ import 'package:global_repository/global_repository.dart';
 import 'config/config.dart';
 import 'core/server/file_server.dart';
 import 'v2/file_manager.dart';
+
 Future<void> main() async {
   // debugPaintLayerBordersEnabled = true; // 显示层级边界÷
   if (!GetPlatform.isWeb) {
@@ -20,11 +21,11 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   String get urlPrefix {
-    Uri uri = Uri.tryParse(url);
-    String perfix = 'http://${uri.host}:20000';
+    Uri? uri = Uri.tryParse(url);
+    String perfix = 'http://${uri!.host}:20000';
     if (kIsWeb && kDebugMode) {
       perfix = 'http://192.168.140.102:20000';
     }
@@ -47,8 +48,8 @@ class MyApp extends StatelessWidget {
 
 class FutureWrapper extends StatefulWidget {
   const FutureWrapper({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
   final Widget child;
 
@@ -80,7 +81,6 @@ class _FutureWrapperState extends State<FutureWrapper> {
           case ConnectionState.done:
             return widget.child;
         }
-        return const SizedBox();
       },
     );
   }

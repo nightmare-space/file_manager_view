@@ -3,7 +3,7 @@ import 'package:file_manager_view/core/io/interface/file_entity.dart';
 import 'package:flutter/material.dart';
 
 class FileItemSuffix extends StatelessWidget {
-  const FileItemSuffix({Key key, this.fileNode}) : super(key: key);
+  const FileItemSuffix({Key ?key, required this.fileNode}) : super(key: key);
 
   final FileEntity fileNode;
 

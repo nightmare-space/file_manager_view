@@ -7,7 +7,7 @@ import 'package:file_manager_view/core/io/util/directory_factory.dart';
 import 'package:global_repository/global_repository.dart';
 
 class DirectoryWindows extends FileEntity implements Directory {
-  DirectoryWindows(String path, {String info, Executable shell}) {
+  DirectoryWindows(String path, {String ?info, Executable ?shell}) {
     this.path = path;
     this.info = info;
   }

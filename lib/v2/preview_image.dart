@@ -6,7 +6,7 @@ import 'package:signale/signale.dart';
 
 // 预览图片的组件
 class PreviewImage extends StatefulWidget {
-  const PreviewImage({Key key, this.path, this.tag}) : super(key: key);
+  const PreviewImage({Key ?key, required this.path,required this.tag}) : super(key: key);
   final String path;
   // hero
   final String tag;
@@ -15,7 +15,7 @@ class PreviewImage extends StatefulWidget {
 }
 
 class _PreviewImageState extends State<PreviewImage> {
-  String path;
+  late String path;
 
   @override
   void initState() {

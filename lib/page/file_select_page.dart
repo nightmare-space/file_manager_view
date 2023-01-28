@@ -9,7 +9,7 @@ import 'package:global_repository/global_repository.dart';
 /// Created By Nightmare on 2021/7/20
 /// 文件选择组件
 class FileSelectPage extends StatefulWidget {
-  FileSelectPage({Key key}) : super(key: key) {
+  FileSelectPage({Key ?key}) : super(key: key) {
     if (RuntimeEnvir.packageName != Config.packageName &&
         !GetPlatform.isDesktop) {
       // 如果这个项目是独立运行的，那么RuntimeEnvir.packageName会在main函数中被设置成Config.packageName

@@ -9,7 +9,8 @@ import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as path;
 import 'file_manager_controller.dart';
 
-Directory appDocDir;
+Directory? appDocDir;
+
 enum WindowType {
   /// 选择文件
   selectFile,
@@ -20,12 +21,13 @@ enum WindowType {
   /// 默认浏览方式
   defaultType,
 }
+
 typedef PathCallback = Future<void> Function(String path);
 
 class FileManagerWindow extends StatefulWidget {
   const FileManagerWindow({
-    Key key,
-    @required this.initPath,
+    Key? key,
+    required this.initPath,
     // 这个值为真，单机item的时候会直接返回item的路径
     this.windowType = WindowType.defaultType,
   }) : super(key: key);
@@ -36,13 +38,12 @@ class FileManagerWindow extends StatefulWidget {
   _FileManagerWindowState createState() => _FileManagerWindowState();
 }
 
-class _FileManagerWindowState extends State<FileManagerWindow>
-    with TickerProviderStateMixin {
+class _FileManagerWindowState extends State<FileManagerWindow> with TickerProviderStateMixin {
   final List<FileManagerController> _controllers = [];
   //动画控制器，用来控制文件夹进入时的透明度
-  AnimationController _animationController;
+  late AnimationController _animationController;
   //透明度动画补间值
-  Animation<double> _opacityTween;
+  late Animation<double> _opacityTween;
   //记录每一次的浏览位置，key 是路径，value是offset
   Map<String, double> offsetStore = {};
   PageController pageController = PageController(initialPage: 0);
@@ -54,7 +55,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
   void initState() {
     super.initState();
     _controllers.add(FileManagerController(widget.initPath));
-    fileSelectController?.updateCurrentDirPath(widget.initPath);
+    fileSelectController.updateCurrentDirPath(widget.initPath);
     initAnimation();
     pageController.addListener(() {
       setState(() {});
@@ -87,8 +88,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
       parent: _animationController,
       curve: Curves.ease,
     );
-    _opacityTween = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(curve); //初始化这个动画的值始终为一，那么第一次打开就不会有透明度的变化
+    _opacityTween = Tween<double>(begin: 0.0, end: 1.0).animate(curve); //初始化这个动画的值始终为一，那么第一次打开就不会有透明度的变化
     _opacityTween.addListener(() {
       setState(() {});
     });
@@ -138,7 +138,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
     // final String backpath = path.dirname(_controller.dirPath);
     // _controller.updateFileNodes(backpath);
 
-    // return false;
+    return false;
   }
 
   @override
@@ -174,7 +174,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
         // });
         enterBackDir(currentPath);
         Log.e('offsetStore[currentPath] -> ${offsetStore[currentPath]}');
-        fileSelectController?.updateCurrentDirPath(entity.parentPath);
+        fileSelectController.updateCurrentDirPath(entity.parentPath);
       } else {
         // 目标路径为点击的文件节点的路径
         currentPath = entity.path;
@@ -220,7 +220,7 @@ class _FileManagerWindowState extends State<FileManagerWindow>
         //   setState(() {});
         // }
         enterDir(entity.path);
-        fileSelectController?.updateCurrentDirPath(entity.path);
+        fileSelectController.updateCurrentDirPath(entity.path);
       }
       Log.e('currentPath -> $currentPath');
     }
@@ -251,13 +251,13 @@ class _FileManagerWindowState extends State<FileManagerWindow>
               if (pageController.hasClients && _controllers.length > 1) {
                 // int currentPage
                 // pageController.
-                if (pageController.page.toInt() - index == 0) {
+                if (pageController.page!.toInt() - index == 0) {
                   // Log.d('index -> $index');
-                  scale = 1 - 0.4 * (pageController.page - index);
+                  scale = 1 - 0.4 * (pageController.page !- index);
                 } else {
                   // Log.w(
                   //     'index - pageController.page -> ${index - pageController.page}');
-                  scale = 0.6 + 0.4 * (pageController.page - index + 1);
+                  scale = 0.6 + 0.4 * (pageController.page !- index + 1);
                 }
               }
               return Transform(

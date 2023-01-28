@@ -17,10 +17,9 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
 
-
 class FileManager extends StatefulWidget {
   const FileManager({
-    Key key,
+    Key? key,
     this.drawer = true,
     this.path = '/sdcard',
     this.padding,
@@ -31,8 +30,8 @@ class FileManager extends StatefulWidget {
 
   final bool drawer;
   final String path;
-  final EdgeInsetsGeometry padding;
-  final String address;
+  final EdgeInsetsGeometry? padding;
+  final String? address;
   // 是否使用package前缀
   final bool usePackage;
   final WindowType windowType;
@@ -43,7 +42,7 @@ class FileManager extends StatefulWidget {
 
 class _FileManagerState extends State<FileManager> {
   FileSelectController fileSelectController = Get.put(FileSelectController());
-  FileManagerController fileManagerController;
+  late FileManagerController fileManagerController;
   bool isGrid = false;
 
   @override
@@ -57,7 +56,7 @@ class _FileManagerState extends State<FileManager> {
       FileManagerController(widget.path),
     );
     if (widget.address != null) {
-      fileManagerController.changeAddr(widget.address);
+      fileManagerController.changeAddr(widget.address!);
       fileManagerController.updatePath(widget.path);
     }
   }
@@ -65,9 +64,7 @@ class _FileManagerState extends State<FileManager> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: Theme.of(context).brightness == Brightness.dark
-          ? OverlayStyle.light
-          : OverlayStyle.dark,
+      value: Theme.of(context).brightness == Brightness.dark ? OverlayStyle.light : OverlayStyle.dark,
       child: Scaffold(
         backgroundColor: const Color(0xfff3f4f9),
         body: SafeArea(
@@ -77,9 +74,7 @@ class _FileManagerState extends State<FileManager> {
             child: Column(
               children: [
                 Padding(
-                  padding: (widget.drawer && !GetPlatform.isAndroid)
-                      ? EdgeInsets.only(left: 8.w)
-                      : EdgeInsets.zero,
+                  padding: (widget.drawer && !GetPlatform.isAndroid) ? EdgeInsets.only(left: 8.w) : EdgeInsets.zero,
                   child: header(),
                 ),
                 SizedBox(height: 4.w),
@@ -208,23 +203,17 @@ class _FileManagerState extends State<FileManager> {
                             child: FileManagerListView(
                               windowType: widget.windowType,
                               key: Key(fileManagerController.dirPath),
-                              displayType: isGrid
-                                  ? WindowDisplayType.grid
-                                  : WindowDisplayType.list,
+                              displayType: isGrid ? WindowDisplayType.grid : WindowDisplayType.list,
                               itemOnTap: (entity) async {
-                                if (widget.windowType ==
-                                        WindowType.selectFile &&
-                                    entity.isFile) {
+                                if (widget.windowType == WindowType.selectFile && entity.isFile) {
                                   return;
                                 }
                                 if (entity is File) {
                                   String path = entity.path;
                                   Directory dir = fileManagerController.dir;
-                                  if (dir is DirectoryBrowser &&
-                                      dir.addr != null) {
-                                    Uri uri = Uri.tryParse(dir.addr);
-                                    path =
-                                        'http://${uri.host}:${uri.port}$path';
+                                  if (dir is DirectoryBrowser && dir.addr != null) {
+                                    Uri uri = Uri.tryParse(dir.addr)!;
+                                    path = 'http://${uri.host}:${uri.port}$path';
                                   }
                                   FileUtil.openFile(path);
                                   return;
@@ -234,8 +223,7 @@ class _FileManagerState extends State<FileManager> {
                                     p.dirname(fileManagerController.dirPath),
                                   );
                                 } else {
-                                  fileManagerController
-                                      .updateFileNodes(entity.path);
+                                  fileManagerController.updateFileNodes(entity.path);
                                 }
                               },
                               itemOnLongPress: (entity, offset) {
@@ -369,10 +357,7 @@ class _FileManagerState extends State<FileManager> {
                             GestureDetector(
                               onTap: () {
                                 FileManagerController controller = Get.find();
-                                controller.updateFileNodes(dir
-                                    .take(i + 1)
-                                    .join('/')
-                                    .replaceAll('//', '/'));
+                                controller.updateFileNodes(dir.take(i + 1).join('/').replaceAll('//', '/'));
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -427,15 +412,15 @@ class _FileManagerState extends State<FileManager> {
 
 class DrawerItem extends StatelessWidget {
   const DrawerItem({
-    Key key,
-    this.title,
+    Key? key,
+    required this.title,
     this.onTap,
-    this.value,
-    this.groupValue,
-    this.icon,
+    required this.value,
+    required this.groupValue,
+    required this.icon,
   }) : super(key: key);
   final String title;
-  final void Function(String value) onTap;
+  final void Function(String value)? onTap;
   final String value;
   final String groupValue;
   final Widget Function(Color color) icon;
@@ -443,13 +428,11 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isChecked = value == groupValue;
 
-    Color color = isChecked
-        ? Theme.of(context).primaryColor
-        : Theme.of(context).colorScheme.onBackground;
+    Color color = isChecked ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onBackground;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       child: InkWell(
-        onTap: () => onTap(value),
+        onTap: () => onTap?.call(value),
         canRequestFocus: false,
         onTapDown: (_) {
           Feedback.forLongPress(context);

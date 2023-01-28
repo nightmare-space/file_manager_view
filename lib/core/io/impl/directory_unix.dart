@@ -7,7 +7,7 @@ import 'package:file_manager_view/core/io/util/directory_factory.dart';
 import 'package:global_repository/global_repository.dart';
 
 class DirectoryUnix extends FileEntity implements Directory {
-  DirectoryUnix(String path, {String info, Executable shell}) {
+  DirectoryUnix(String path, {String? info, Executable? shell}) {
     this.path = path;
     this.info = info;
     this.shell = shell;
@@ -89,8 +89,7 @@ Future<List<String>> getFullMessage(String path) async {
       Log.i('map.keys->${map.keys}');
       Log.i('map.keys->${map.keys.contains(linkFromFile)}');
       if (map.keys.contains(linkFromFile)) {
-        fullmessage[i] = fullmessage[i]
-            .replaceAll(RegExp('^l'), map[fullmessage[i].split(' -> ').last]);
+        fullmessage[i] = fullmessage[i].replaceAll(RegExp('^l'), map[fullmessage[i].split(' -> ').last]!);
         // f.remove(f.first);r
       }
     }

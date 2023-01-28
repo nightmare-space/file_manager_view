@@ -10,7 +10,7 @@ enum ClipType {
 class Clipboards extends ChangeNotifier {
   List<FileEntity> checkNodes = <FileEntity>[];
   final List<String> _clipboard = <String>[];
-  ClipType _clipType;
+  late ClipType _clipType;
   ClipType get clipType => _clipType;
   List<String> get clipboard => _clipboard;
   void addCheck(FileEntity fileNode) {

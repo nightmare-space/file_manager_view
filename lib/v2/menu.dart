@@ -14,14 +14,14 @@ import 'dialog/delete.dart';
 
 class Menu extends StatefulWidget {
   const Menu({
-    Key key,
-    this.entity,
+    Key? key,
+    required this.entity,
     this.offset = const Offset(0, 0),
     this.prefix,
   }) : super(key: key);
   final FileEntity entity;
   final Offset offset;
-  final String prefix;
+  final String? prefix;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -66,19 +66,15 @@ class _MenuState extends State<Menu> {
                     InkWell(
                       onTap: () async {
                         // String url;
-                        FileManagerController fileManagerController =
-                            Get.find();
+                        FileManagerController fileManagerController = Get.find();
                         String path = widget.entity.path;
                         Directory dir = fileManagerController.dir;
                         Uri uri;
                         if (dir is DirectoryBrowser && dir.addr != null) {
-                          uri = Uri.tryParse(dir.addr);
+                          uri = Uri.tryParse(dir.addr)!;
                           path = 'http://${uri.host}:${uri.port}$path';
                         }
-                        await canLaunch(Uri.encodeFull(path))
-                            ? await launch(
-                                Uri.encodeFull('$path' '?download=true'))
-                            : throw 'Could not launch $url';
+                        await canLaunch(Uri.encodeFull(path)) ? await launch(Uri.encodeFull('$path' '?download=true')) : throw 'Could not launch $url';
                         Navigator.of(context).pop();
                       },
                       child: SizedBox(
@@ -98,18 +94,15 @@ class _MenuState extends State<Menu> {
                     ),
                     InkWell(
                       onTap: () async {
-                        FileManagerController fileManagerController =
-                            Get.find();
+                        FileManagerController fileManagerController = Get.find();
                         String path = widget.entity.path;
                         Directory dir = fileManagerController.dir;
                         Uri uri;
                         if (dir is DirectoryBrowser && dir.addr != null) {
-                          uri = Uri.tryParse(dir.addr);
+                          uri = Uri.tryParse(dir.addr)!;
                           path = 'http://${uri.host}:${uri.port}$path';
                         }
-                        await canLaunch(Uri.encodeFull(path))
-                            ? await launch(Uri.encodeFull(path))
-                            : throw 'Could not launch $url';
+                        await canLaunch(Uri.encodeFull(path)) ? await launch(Uri.encodeFull(path)) : throw 'Could not launch $url';
                         Navigator.of(context).pop();
                       },
                       child: SizedBox(

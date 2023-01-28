@@ -7,18 +7,18 @@ import 'package:global_repository/global_repository.dart';
 import 'directory_unix.dart';
 
 class DirectoryBrowser extends FileEntity implements Directory {
-  DirectoryBrowser(String path, {String info = '', Executable shell}) {
+  DirectoryBrowser(String path, {String info = '', Executable ?shell}) {
     this.path = path;
     this.info = info;
   }
 
-  String addr;
+  late String addr;
 
   @override
   Future<List<FileEntity>> list({
     bool verbose = true,
   }) async {
-    Response<String> response;
+    late Response<String> response;
     try {
       response = await Dio().get<String>(
         '$addr/getdir',
@@ -27,7 +27,7 @@ class DirectoryBrowser extends FileEntity implements Directory {
     } catch (e) {
       Log.e('$this error ->$e');
     }
-    List<dynamic> full = (jsonDecode(response.data) as List<dynamic>);
+    List<dynamic> full = (jsonDecode(response.data!) as List<dynamic>);
     List<String> ful = full.cast();
     return getFilesFrom(ful, path);
   }

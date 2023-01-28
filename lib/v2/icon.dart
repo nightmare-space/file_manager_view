@@ -10,7 +10,7 @@ import 'dart:io' as io;
 
 Widget getIconByExt(String path) {
   FileManagerController fileManagerController = Get.find();
-  Widget child;
+  Widget? child;
   if (path.isVideo) {
     child = Image.asset(
       'assets/icon/video.png',
@@ -49,9 +49,7 @@ Widget getIconByExt(String path) {
   } else if (path.isImg) {
     Directory dir = fileManagerController.dir;
     if (dir is DirectoryBrowser && dir.addr != null) {
-      Uri uri = Uri.tryParse(
-        (fileManagerController.dir as DirectoryBrowser).addr,
-      );
+      Uri uri = Uri.tryParse((fileManagerController.dir as DirectoryBrowser).addr)!;
       String perfix = 'http://${uri.host}:20000';
       path = perfix + path;
     }

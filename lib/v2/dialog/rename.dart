@@ -8,7 +8,7 @@ import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart';
 
 class RenameFile extends StatefulWidget {
-  const RenameFile({Key key, this.entity}) : super(key: key);
+  const RenameFile({Key? key, required this.entity}) : super(key: key);
   final FileEntity entity;
 
   @override
@@ -16,7 +16,7 @@ class RenameFile extends StatefulWidget {
 }
 
 class _RenameFileState extends State<RenameFile> {
-  TextEditingController textEditingController;
+  late TextEditingController textEditingController;
   FocusNode focusNode = FocusNode();
   @override
   void initState() {
@@ -106,9 +106,9 @@ class _RenameFileState extends State<RenameFile> {
                     FileManagerController fileManagerController = Get.find();
                     String path = widget.entity.path;
                     Directory dir = fileManagerController.dir;
-                    Uri uri;
+                    late Uri uri;
                     if (dir is DirectoryBrowser && dir.addr != null) {
-                      uri = Uri.tryParse(dir.addr);
+                      uri = Uri.tryParse(dir.addr)!;
                     }
                     try {
                       var response = await Dio().get<String>(
@@ -137,9 +137,9 @@ class _RenameFileState extends State<RenameFile> {
                       FileManagerController fileManagerController = Get.find();
                       String path = widget.entity.path;
                       Directory dir = fileManagerController.dir;
-                      Uri uri;
+                      late Uri uri;
                       if (dir is DirectoryBrowser && dir.addr != null) {
-                        uri = Uri.tryParse(dir.addr);
+                        uri = Uri.tryParse(dir.addr)!;
                       }
                       try {
                         var response = await Dio().get<String>(

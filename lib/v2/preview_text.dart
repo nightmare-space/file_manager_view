@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PreviewText extends StatefulWidget {
-  const PreviewText({Key key, this.path}) : super(key: key);
+  const PreviewText({Key ?key,required this.path}) : super(key: key);
   final String path;
 
   @override

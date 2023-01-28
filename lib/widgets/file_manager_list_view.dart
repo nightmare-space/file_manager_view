@@ -23,9 +23,9 @@ enum WindowDisplayType {
 
 class FileManagerListView extends StatefulWidget {
   const FileManagerListView({
-    Key key,
-    @required this.controller,
-    this.windowType,
+    Key? key,
+    required this.controller,
+    required this.windowType,
     this.itemOnTap,
     this.itemOnLongPress,
     this.initScrollOffset = 0,
@@ -35,14 +35,14 @@ class FileManagerListView extends StatefulWidget {
 
   final FileManagerController controller;
   final WindowType windowType;
-  final FileOnTap itemOnTap;
-  final FileOnLongPress itemOnLongPress;
+  final FileOnTap? itemOnTap;
+  final FileOnLongPress? itemOnLongPress;
   final double initScrollOffset;
-  final OnRightMouseClick onRightMouseClick;
+  final OnRightMouseClick? onRightMouseClick;
   final WindowDisplayType displayType;
 
   @override
-  _FileManagerListViewState createState() => _FileManagerListViewState();
+  State createState() => _FileManagerListViewState();
 }
 
 class _FileManagerListViewState extends State<FileManagerListView> {
@@ -69,11 +69,11 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     for (final FileEntity fileNode in widget.controller.fileNodes) {
       //将文件的ls输出详情以空格隔开分成列表
       if (fileNode.name != '..') {
-        final List<String> infos = fileNode.info.split(RegExp(r'\s{1,}'));
+        final List<String> infos = fileNode.info!.split(RegExp(r'\s{1,}'));
         // Log.w(infos);
         fileNode.modified = '${infos[3]}  ${infos[4]}';
         if (fileNode.isFile) {
-          fileNode.size = FileSizeUtils.getFileSizeFromStr(infos[2]);
+          fileNode.size = FileSizeUtils.getFileSizeFromStr(infos[2])!;
         } else {
           fileNode.itemsNumber = '${infos[1]}项';
         }
@@ -103,7 +103,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
     return (max - 20.w) ~/ 78.w;
   }
 
-  Offset offset;
+  Offset? offset;
 
   void handleOnTap() {}
   @override
@@ -143,8 +143,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         cacheExtent: 400,
-        controller:
-            ScrollController(initialScrollOffset: widget.initScrollOffset),
+        controller: ScrollController(initialScrollOffset: widget.initScrollOffset),
         itemCount: widget.controller.fileNodes.length,
         padding: EdgeInsets.only(bottom: 100.w),
         //不然会有一个距离上面的边距
@@ -153,9 +152,8 @@ class _FileManagerListViewState extends State<FileManagerListView> {
           return Builder(builder: (context) {
             return Listener(
               onPointerDown: (PointerDownEvent event) {
-                if (event.kind == PointerDeviceKind.mouse &&
-                    event.buttons == kSecondaryMouseButton) {
-                  widget.onRightMouseClick?.call(entity, offset);
+                if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
+                  widget.onRightMouseClick?.call(entity, offset!);
                 }
               },
               child: GestureDetector(
@@ -174,7 +172,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
                       widget.itemOnTap?.call(entity);
                     },
                     onLongPress: () {
-                      widget.itemOnLongPress?.call(entity, offset);
+                      widget.itemOnLongPress?.call(entity, offset!);
                     },
                     fileEntity: entity,
                   ),
@@ -190,9 +188,9 @@ class _FileManagerListViewState extends State<FileManagerListView> {
 
 class GridFileItem extends StatefulWidget {
   const GridFileItem({
-    Key key,
-    this.entity,
-    this.onTap,
+    Key? key,
+    required this.entity,
+    required this.onTap,
   }) : super(key: key);
   final FileEntity entity;
   final void Function() onTap;
@@ -218,7 +216,7 @@ class _GridFileItemState extends State<GridFileItem> {
     }
     return InkWell(
       onTap: () {
-        widget.onTap?.call();
+        widget.onTap.call();
       },
       child: LayoutBuilder(builder: (context, con) {
         Log.i('con : $con');
@@ -254,22 +252,22 @@ class _GridFileItemState extends State<GridFileItem> {
 
 class FileItem extends StatefulWidget {
   const FileItem({
-    Key key,
-    this.fileEntity,
+    Key? key,
+    required this.fileEntity,
     this.isCheck = false,
     this.checkCall,
     this.apkTool,
-    this.controller,
-    this.onTap,
-    this.onLongPress,
+    required this.controller,
+    required this.onTap,
+    required this.onLongPress,
     this.windowType = WindowType.defaultType,
   }) : super(key: key);
 
   final FileManagerController controller;
   final FileEntity fileEntity;
-  final Function apkTool;
+  final Function? apkTool;
   final bool isCheck;
-  final Function(String path) checkCall;
+  final Function(String path)? checkCall;
   final void Function() onTap;
   final void Function() onLongPress;
   final WindowType windowType;
@@ -278,12 +276,11 @@ class FileItem extends StatefulWidget {
   _FileItemState createState() => _FileItemState();
 }
 
-class _FileItemState extends State<FileItem>
-    with SingleTickerProviderStateMixin {
-  AnimationController _animationController; //动画控制器
-  Animation<double> curvedAnimation;
-  Animation<double> tweenPadding; //边距动画补间值
-  FileEntity fileEntity;
+class _FileItemState extends State<FileItem> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController; //动画控制器
+  late Animation<double> curvedAnimation;
+  late Animation<double> tweenPadding; //边距动画补间值
+  late FileEntity fileEntity;
 
   FileSelectController clipboardController = Get.find();
 
@@ -388,8 +385,7 @@ class _FileItemState extends State<FileItem>
               widget.onLongPress();
             },
             onTap: () {
-              if (widget.windowType == WindowType.selectFile &&
-                  widget.fileEntity.isFile) {
+              if (widget.windowType == WindowType.selectFile && widget.fileEntity.isFile) {
                 Feedback.forLongPress(context);
                 if (clipboardController.checkNodes.contains(fileEntity)) {
                   clipboardController.removeCheck(widget.fileEntity);
@@ -449,9 +445,7 @@ class _FileItemState extends State<FileItem>
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: SizedBox(
-                                    width: MediaQuery.of(context).size.width -
-                                        8 -
-                                        30,
+                                    width: MediaQuery.of(context).size.width - 8 - 30,
                                     child: Text(
                                       '${fileEntity.modified} ${fileEntity.itemsNumber} ${fileEntity.mode} ${fileEntity.size}',
                                       maxLines: 1,

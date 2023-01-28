@@ -15,15 +15,15 @@ class FileManagerController extends GetxController {
   }
   final double initOffset;
   String dirPath;
-  Directory dir;
+  late Directory dir;
   //保存所有文件的节点
   List<FileEntity> fileNodes = <FileEntity>[];
-  String addr;
+  late String addr;
   void changeAddr(String addr) {
     this.addr = addr;
   }
 
-  Future<void> updateFileNodes([String path]) async {
+  Future<void> updateFileNodes([String? path]) async {
     dirPath = path ?? dirPath;
     // 获取文件列表和刷新页面
     dir = DirectoryFactory.getPlatformDirectory(
