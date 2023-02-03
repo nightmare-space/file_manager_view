@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/core/io/impl/directory_unix.dart';
 import 'package:get/utils.dart';
 import 'package:global_repository/global_repository.dart';
@@ -50,9 +51,21 @@ class Server {
       Log.i(request.requestedUri.queryParameters);
       String path = request.requestedUri.queryParameters['path']!;
       corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
-      List<String> full = await getFullMessage(path);
+      List<String> full;
+      if (Platform.isIOS) {
+        full = await getIOSFullMessage(path);
+      } else {
+        full = await getFullMessage(path);
+      }
       return Response.ok(
         jsonEncode(full),
+        headers: corsHeader,
+      );
+    });
+    app.get('/token', (Request request) async {
+      Log.i(request.requestedUri.queryParameters);
+      return Response.ok(
+        'success',
         headers: corsHeader,
       );
     });
@@ -61,9 +74,10 @@ class Server {
     HttpServer server = await io.serve(
       app,
       InternetAddress.anyIPv4,
-      20000,
-      shared: true,
+      Config.port,
+      shared: false,
     );
+    print('File Serer start with ${InternetAddress.anyIPv4.address}:${Config.port}');
   }
 
   // 启动文件管理器服务端
@@ -109,6 +123,52 @@ class Server {
   }
 }
 
+String _twoDigits(int n) {
+  if (n >= 10) return "$n";
+  return "0$n";
+}
+
+String wrapSpace(String itemNumber, String size) {
+  return ('$itemNumber $size').padRight(10);
+}
+
+extension TimeExt on DateTime {
+  String fmTime() {
+    StringBuffer buffer = StringBuffer();
+    buffer.write('$year-${_twoDigits(month)}-${_twoDigits(day)} ');
+    buffer.write('${_twoDigits(hour)}:${_twoDigits(minute)}');
+    return buffer.toString();
+  }
+}
+
+Future<List<String>> getIOSFullMessage(String path) async {
+  List<String> message = [];
+  for (final FileSystemEntity fileSystemEntity in Directory(path).listSync()) {
+    print('fileSystemEntity -> $fileSystemEntity');
+    if (fileSystemEntity is Directory) {
+      StringBuffer buffer = StringBuffer();
+      FileStat stat = fileSystemEntity.statSync();
+      buffer.write('d${stat.modeString()} ');
+      buffer.write(wrapSpace('0', stat.size.toString()));
+      buffer.write('${stat.modified.fmTime()} ');
+      buffer.write('${basename(fileSystemEntity.path)}');
+      message.add(buffer.toString());
+      // message.add('value')
+    } else {
+      StringBuffer buffer = StringBuffer();
+      FileStat stat = fileSystemEntity.statSync();
+      buffer.write('-${stat.modeString()} ');
+      // buffer.write('0 ');
+      // buffer.write('${stat.size} ');
+      buffer.write(wrapSpace('0', stat.size.toString()));
+      buffer.write('${stat.modified.fmTime()} ');
+      buffer.write('${basename(fileSystemEntity.path)}');
+      message.add(buffer.toString());
+    }
+  }
+  return message;
+}
+
 Future<String> execCmd(
   String cmd, {
   bool throwException = true,
@@ -117,7 +177,7 @@ Future<String> execCmd(
   ProcessResult execResult;
   if (Platform.isWindows) {
     execResult = await Process.run(
-      RuntimeEnvir.binPath !+ Platform.pathSeparator + args[0],
+      RuntimeEnvir.binPath! + Platform.pathSeparator + args[0],
       args.sublist(1),
       environment: RuntimeEnvir.envir(),
       includeParentEnvironment: true,

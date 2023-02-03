@@ -54,6 +54,7 @@ class _FileManagerListViewState extends State<FileManagerListView> {
   }
 
   void controllerCallback() {
+    setState(() {});
     if (mounted) {
       getNodeFullArgs();
       // if (historyOffset.keys.contains(_controller.dirPath)) {

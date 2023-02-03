@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   signale: ^0.0.8
   flutter_svg: ^1.1.6
+  path_provider: ^2.0.12
 
 dev_dependencies:
   flutter_test:
@@ -33,5 +34,6 @@ flutter:
     - assets/icon/
     
 dependency_overrides:
+  fwfh_text_style: 2.22.8+1
   # global_repository:
   #   path: /Users/nightmare/Desktop/nightmare-space/global_repository

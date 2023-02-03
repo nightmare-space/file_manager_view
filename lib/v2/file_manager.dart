@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'package:file_manager_view/config/config.dart';
 import 'package:file_manager_view/controller/clipboard_controller.dart';
 import 'package:file_manager_view/core/io/extension/extension.dart';
@@ -9,13 +10,13 @@ import 'package:file_manager_view/v2/menu.dart';
 import 'package:file_manager_view/widgets/file_manager_controller.dart';
 import 'package:file_manager_view/widgets/file_manager_list_view.dart';
 import 'package:file_manager_view/widgets/file_manager_window.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class FileManager extends StatefulWidget {
   const FileManager({
@@ -59,6 +60,12 @@ class _FileManagerState extends State<FileManager> {
       fileManagerController.changeAddr(widget.address!);
       fileManagerController.updatePath(widget.path);
     }
+  }
+
+  Future<void> initIOS() async {
+    io.Directory tempDir = await path_provider.getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    fileManagerController.updatePath(tempPath);
   }
 
   @override
