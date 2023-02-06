@@ -333,11 +333,11 @@ class _FileManagerState extends State<FileManager> {
                           );
                         }
                         List<String> dir = controller.dirPath.split('/');
-                        Log.w(dir);
+                        // Log.w(dir);
                         dir[0] = '/';
                         List<Widget> children = [];
                         for (int i = 0; i < dir.length; i++) {
-                          Log.i(i.toString() + dir.take(i + 1).join('/'));
+                          // Log.i(i.toString() + dir.take(i + 1).join('/'));
                           if (i == dir.length - 1) {
                             children.add(
                               Container(

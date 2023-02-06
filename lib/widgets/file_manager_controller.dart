@@ -11,7 +11,7 @@ class FileManagerController extends GetxController {
     this.dirPath, {
     this.initOffset = 0,
   }) {
-    Log.e('初始化');
+    // Log.e('初始化');
   }
   final double initOffset;
   String dirPath;
