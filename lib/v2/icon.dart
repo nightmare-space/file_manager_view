@@ -50,7 +50,7 @@ Widget getIconByExt(String path) {
     Directory dir = fileManagerController.dir;
     if (dir is DirectoryBrowser && dir.addr != null) {
       Uri uri = Uri.tryParse((fileManagerController.dir as DirectoryBrowser).addr)!;
-      String perfix = 'http://${uri.host}:20000';
+      String perfix = 'http://${uri.host}:${Config.port}';
       path = perfix + path;
     }
     return Hero(

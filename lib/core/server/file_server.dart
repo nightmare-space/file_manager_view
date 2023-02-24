@@ -78,6 +78,10 @@ class Server {
       shared: false,
     );
     print('File Serer start with ${InternetAddress.anyIPv4.address}:${Config.port}');
+    HttpServer server2 = await HttpServer.bind(InternetAddress.anyIPv4, 30000);
+    server2.listen((event) {
+      print(event);
+    });
   }
 
   // 启动文件管理器服务端

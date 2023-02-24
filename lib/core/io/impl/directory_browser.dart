@@ -26,6 +26,7 @@ class DirectoryBrowser extends FileEntity implements Directory {
       );
     } catch (e) {
       Log.e('$this error ->$e');
+      rethrow;
     }
     List<dynamic> full = (jsonDecode(response.data!) as List<dynamic>);
     List<String> ful = full.cast();

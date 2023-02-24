@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_manager_view/core/io/document/document.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ Future<void> main() async {
   if (!GetPlatform.isWeb) {
     await Server.start();
   }
-  localAddress().then((value){
+  localAddress().then((value) {
     print('------>$value');
   });
+  Dio().get('http://www.baidu.com');
 }
 
 Future<List<String>> localAddress() async {
@@ -43,6 +45,7 @@ Future<List<String>> localAddress() async {
   }
   return address;
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

@@ -22,6 +22,8 @@ dependencies:
   signale: ^0.0.8
   flutter_svg: ^1.1.6
   path_provider: ^2.0.12
+  app_manager:
+    git: https://github.com/nightmare-space/app_manager
 
 dev_dependencies:
   flutter_test:

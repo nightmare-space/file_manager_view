@@ -3,5 +3,5 @@ class Config {
   static String flutterPackage = '';
   static String? package;
   static String packagePrefix = 'packages/file_manager_view/';
-  static int port = 9000;
+  static int port = 30000;
 }
