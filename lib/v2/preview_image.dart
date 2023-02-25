@@ -15,7 +15,6 @@ class PreviewImage extends StatefulWidget {
 }
 
 class _PreviewImageState extends State<PreviewImage> {
-  late String path;
 
   @override
   void initState() {
@@ -25,7 +24,6 @@ class _PreviewImageState extends State<PreviewImage> {
   @override
   Widget build(BuildContext context) {
     Log.e(widget.path);
-    Log.i(path);
     return Material(
       child: Stack(
         alignment: Alignment.center,
