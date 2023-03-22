@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -20,8 +21,38 @@ final corsHeader = {
 };
 
 class Server {
+  static List<String> routes = [
+    '/rename',
+    '/delete',
+    '/getdir',
+    '/token',
+    '/file_upload',
+  ];
   // 启动文件管理器服务端
   static Future<void> start() async {
+    Router fileRouter = getFileServerHandler();
+    final cross = const Pipeline().addMiddleware((innerHandler) {
+      return (request) async {
+        final response = await innerHandler(request);
+        // Log.w(request.headers);
+        // Log.i(request.requestedUri);
+        if (request.method == 'OPTIONS') {
+          return Response.ok('', headers: corsHeader);
+        }
+        return response;
+      };
+    }).addHandler(fileRouter);
+    HttpServer server = await io.serve(
+      cross,
+      InternetAddress.anyIPv4,
+      Config.port,
+      shared: false,
+    );
+    print('File Serer start with ${server.address.address}:${Config.port}');
+  }
+
+  // 启动文件管理器服务端
+  static Router getFileServerHandler() {
     var handler = createStaticHandler(
       GetPlatform.isMacOS ? '/Users' : '/',
       listDirectories: true,
@@ -69,56 +100,52 @@ class Server {
         headers: corsHeader,
       );
     });
-    app.mount('/', (request) => handler(request));
     // ignore: unused_local_variable
-    HttpServer server = await io.serve(
-      app,
-      InternetAddress.anyIPv4,
-      Config.port,
-      shared: false,
-    );
-    print('File Serer start with ${InternetAddress.anyIPv4.address}:${Config.port}');
-  }
-
-  // 启动文件管理器服务端
-  static Router getFileServerHandler() {
-    var handler = createStaticHandler(
-      GetPlatform.isMacOS ? '/Users' : '/',
-      listDirectories: true,
-    );
-    app.get('/rename', (Request request) async {
-      Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path']!;
-      String name = request.requestedUri.queryParameters['name']!;
-      await File(path).rename(dirname(path) + '/' + name);
-      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
+    app.post('/file_upload', (Request request) async {
+      // return Response.ok(
+      //   "success",
+      //   headers: corsHeader,
+      // );
+      Log.w(request.headers);
+      String? fileName = request.headers['filename'];
+      String? path = request.headers['path'];
+      if (fileName != null && path != null) {
+        // fileName = utf8.decode(base64Decode(fileName));
+        RandomAccessFile randomAccessFile = await File('$path/$fileName').open(
+          mode: FileMode.write,
+        );
+        int? fullLength = int.tryParse(request.headers['content-length']!);
+        Log.d('fullLength -> $fullLength');
+        Completer<bool> lock = Completer();
+        // 已经下载的字节长度
+        int count = 0;
+        request.read().listen(
+          (event) async {
+            count += event.length;
+            // Log.d(event);
+            // dateBytes.addAll(event);
+            // progressCall?.call(
+            //   dateBytes.length / request.headers.contentLength,
+            //   dateBytes.length,
+            // );
+            randomAccessFile.writeFromSync(event);
+            double progress = count / fullLength!;
+            if (progress == 1.0) {
+              lock.complete(true);
+            }
+          },
+          onDone: () {},
+        );
+        await lock.future;
+        randomAccessFile.close();
+        Log.v('success');
+      }
       return Response.ok(
         "success",
         headers: corsHeader,
       );
     });
-    app.get('/delete', (Request request) async {
-      Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path']!;
-      await File(path).delete();
-      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.text.toString();
-      return Response.ok(
-        "success",
-        headers: corsHeader,
-      );
-    });
-    app.get('/getdir', (Request request) async {
-      Log.i(request.requestedUri.queryParameters);
-      String path = request.requestedUri.queryParameters['path']!;
-      corsHeader[HttpHeaders.contentTypeHeader] = ContentType.json.toString();
-      List<String> full = await getFullMessage(path);
-      return Response.ok(
-        jsonEncode(full),
-        headers: corsHeader,
-      );
-    });
     app.mount('/', (request) => handler(request));
-    // ignore: unused_local_variable
     return app;
   }
 }
