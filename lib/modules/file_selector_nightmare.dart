@@ -4,7 +4,7 @@ import 'directory_select_page.dart';
 import 'file_select_page.dart';
 
 class FileSelector {
-  static Future<List<String>?> pick(
+  static Future<List<String>> pick(
     BuildContext context, {
     String? path,
   }) async {
@@ -20,7 +20,7 @@ class FileSelector {
         },
       ),
     );
-    return result;
+    return result ?? [];
   }
 
   static Future<String?> pickDirectory(BuildContext context) async {
