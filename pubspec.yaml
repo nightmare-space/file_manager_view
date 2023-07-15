@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   
-  desktop_drop: ^0.3.3
+  desktop_drop: ^0.4.1
   better_player: ^0.0.83
   shelf_static: ^1.1.1
   shelf_router: ^1.1.3
