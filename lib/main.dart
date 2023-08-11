@@ -141,8 +141,12 @@ class _FutureWrapperState extends State<FutureWrapper> {
 }
 
 class FileDropWrapper extends StatefulWidget {
-  const FileDropWrapper({super.key, required this.child});
+  const FileDropWrapper({
+    required this.child,
+    this.url,
+  });
   final Widget child;
+  final String? url;
 
   @override
   State<FileDropWrapper> createState() => _FileDropWrapperState();
@@ -178,10 +182,10 @@ class _FileDropWrapperState extends State<FileDropWrapper> {
                 try {
                   Log.e('name -> ${xFile.name}');
                   Log.e('path -> ${fileManagerController.dir.path}');
-                  String base64Name = base64Encode(utf8.encode(xFile.name));
+                  String base64Name = base64Encode(utf8.encode(xFile.name!));
                   Log.w(base64Name);
                   Response response2 = await Dio().post<String>(
-                    '$urlPrefix/file_upload',
+                    '${widget.url ?? urlPrefix}/file_upload',
                     data: xFile.openRead(),
                     onSendProgress: (count, total) {
                       Log.v('count:$count total:$total pro:${count / total}');
