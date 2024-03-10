@@ -18,7 +18,7 @@ dependencies:
   dio: ^4.0.6
   global_repository:
     git: https://github.com/nightmare-space/global_repository
-  path: ^1.8.2
+  path: ^1.8.0
   open_file: ^3.2.1
   cupertino_icons: ^1.0.5
   signale: ^0.0.8
