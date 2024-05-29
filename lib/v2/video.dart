@@ -7,7 +7,7 @@ class SerieExample extends StatefulWidget {
   final String path;
 
   @override
-  _SerieExampleState createState() => _SerieExampleState();
+  State createState() => _SerieExampleState();
 }
 
 class _SerieExampleState extends State<SerieExample> {
