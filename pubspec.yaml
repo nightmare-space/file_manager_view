@@ -26,7 +26,7 @@ dependencies:
   path_provider: ^2.0.12
   app_manager:
     git: https://github.com/nightmare-space/app_manager
-  cross_file: 0.3.3+4
+  cross_file: ^0.3.3+7
 
 dev_dependencies:
   flutter_test:
