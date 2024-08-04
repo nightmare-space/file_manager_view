@@ -146,7 +146,7 @@ class _FileSelectPageState extends State<FileSelectPage> {
                           try {
                             CheckController checkContainer = Get.find();
                             for (AppInfo? value in checkContainer.check) {
-                              paths.add(value!.apkPath);
+                              paths.add(value!.sourceDir);
                             }
                             checkContainer.clearCheck();
                           } catch (e) {}

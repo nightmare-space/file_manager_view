@@ -19,13 +19,11 @@ packages:
     source: hosted
     version: "1.0.2"
   app_channel:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: app_channel
-      ref: HEAD
-      resolved-ref: c78615177beb2a406bef75f1d874077a838b0de2
-      url: "https://github.com/nightmare-space/applib"
-    source: git
+      path: "/Users/nightmare/Desktop/nightmare-space/app_channel"
+      relative: false
+    source: path
     version: "0.0.1"
   app_manager:
     dependency: "direct main"

@@ -40,5 +40,7 @@ flutter:
     
 dependency_overrides:
   fwfh_text_style: 2.22.8+1
+  app_channel:
+    path: /Users/nightmare/Desktop/nightmare-space/app_channel
   # global_repository:
   #   path: /Users/nightmare/Desktop/nightmare-space/global_repository
