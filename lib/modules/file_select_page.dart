@@ -16,8 +16,7 @@ import 'app_select.dart';
 /// 文件选择组件
 class FileSelectPage extends StatefulWidget {
   FileSelectPage({Key? key, this.path}) : super(key: key) {
-    if (RuntimeEnvir.packageName != Config.packageName &&
-        !GetPlatform.isDesktop) {
+    if (RuntimeEnvir.packageName != Config.packageName && !GetPlatform.isDesktop) {
       // 如果这个项目是独立运行的，那么RuntimeEnvir.packageName会在main函数中被设置成Config.packageName
       Config.flutterPackage = 'packages/file_manager_view/';
     }
@@ -138,8 +137,7 @@ class _FileSelectPageState extends State<FileSelectPage> {
                       child: InkWell(
                         onTap: () {
                           List<String> paths = [];
-                          for (FileEntity value
-                              in clipboardController.checkNodes) {
+                          for (FileEntity value in clipboardController.checkNodes) {
                             paths.add(value.path);
                           }
                           // TODO bug

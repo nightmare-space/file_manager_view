@@ -3,34 +3,29 @@ import 'package:app_manager/controller/app_manager_controller.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/src/utils/screen_util.dart';
-
-import 'app_select_controller.dart';
+import 'package:global_repository/global_repository.dart';
 
 class AppSelect extends StatefulWidget {
   const AppSelect({Key? key}) : super(key: key);
 
   @override
-  _AppSelectState createState() => _AppSelectState();
+  State createState() => _AppSelectState();
 }
 
 class _AppSelectState extends State<AppSelect> {
-  AppManagerController controller = Get.put((AppManagerController()));
+  AppManagerController appManagerController = Get.put(AppManagerController());
   String filter = '';
 
   @override
   void initState() {
     super.initState();
     Get.put(CheckController());
-    Get.put(IconController());
-    controller.getUserApp();
+    appManagerController.getUserApp();
   }
 
   @override
   void dispose() {
-    Get.delete<AppManagerController>();
     Get.delete<CheckController>();
-    Get.delete<IconController>();
     super.dispose();
   }
 
@@ -52,10 +47,7 @@ class _AppSelectState extends State<AppSelect> {
             init: AppManagerController(),
             autoRemove: false,
             builder: (context) {
-              return AppListPage(
-                filter: filter,
-                appList: context.userApps,
-              );
+              return AppListPage(filter: filter, appInfos: context.userApps);
             },
           ),
         ),
